@@ -1,0 +1,19 @@
+{
+  "name": "woven-js",
+  "version": "1.0.0",
+  "description": "intelligent multi-threading and server processing",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CSdare/woven-js.git"
+  },
+  "author": "team dare",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CSdare/woven-js/issues"
+  },
+  "homepage": "https://github.com/CSdare/woven-js#readme"
+}
