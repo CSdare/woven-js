@@ -4,7 +4,8 @@
   "description": "intelligent multi-threading and server processing",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "test-build": "webpack --display-error-details"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/CSdare/woven-js/issues"
   },
-  "homepage": "https://github.com/CSdare/woven-js#readme"
+  "homepage": "https://github.com/CSdare/woven-js#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "webpack": "^3.10.0"
+  }
 }

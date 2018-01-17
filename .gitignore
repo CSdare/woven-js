@@ -1,0 +1,7 @@
+node_modules
+.vscode
+.env
+build/*.js
+build/*.svg
+.DS_Store
+package-lock
