@@ -13,13 +13,18 @@ module.exports = function runWrapper(options, optimal) {
    */
 
   return function run(funcName, payload) {
+    console.log(options);
     // logic to determine if function sould be run on client or server
     // what order to handle logic for running?
     // options.alwaysServer, options.alwaysClient, optimal.location
     if (options.alwaysClient || optimal.location === 'client') {/* reference optimal.threads here */} // run web worker pool
     else if (options.alwaysServer || optimal.location === 'server') {
-      const functions = require(options.functionsLocation); // how do I get a reference to the functions in 
-      // the functions.js file? should they be methods on the options object, or maybe a functions object?
+      return fetch('/__woven__', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ funcName, payload }),
+      })
+      .then(res => res.json())
     }
   }
 }
