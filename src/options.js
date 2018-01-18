@@ -3,5 +3,6 @@ module.exports = {
   maxThreads: 4,
   alwaysClient: false,
   alwaysServer: false,
-  functionsLocation: __dirname + '/../functions.js',
+  functionsPath: null,
+  defaults: true,
 }
