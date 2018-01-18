@@ -1,13 +1,20 @@
+
 // in server.js:
 
 const woven = require('woven-js');
+
 const wovenOptions = { // defaults
   clientOnly: false,
   serverOnly: false,
+  avgDataPing: 0,
   defaultThreads: 4,
-} // what else?
+}
 
+// set config pointing to file of tools/functions
+// optional options object passed in to set defaults
 woven.config(__dirname + 'functions.js', wovenOptions);
+
+app.use(woven.optimize);
 
 // in App.js:
 
