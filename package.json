@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
+
+    "test-build": "webpack",
     "start-dev": "node dev/testServer.js"
   },
   "repository": {
@@ -18,6 +20,9 @@
   },
   "homepage": "https://github.com/CSdare/woven-js#readme",
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "webpack": "^3.10.0"
