@@ -1,15 +1,17 @@
 {
   "name": "woven-js",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "intelligent multi-threading and server processing",
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "test-build": "webpack"
+
+    "test-build": "webpack",
+    "start-dev": "node dev/testServer.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CSdare/woven-js.git"
+    "url": "git+https://github.com/CSdare/woven-js.git"
   },
   "author": "team dare",
   "license": "ISC",
@@ -21,6 +23,8 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
     "webpack": "^3.10.0"
   }
 }
