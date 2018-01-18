@@ -4,7 +4,8 @@
   "description": "intelligent multi-threading and server processing",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start-dev": "node dev/testServer.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/CSdare/woven-js/issues"
   },
-  "homepage": "https://github.com/CSdare/woven-js#readme"
+  "homepage": "https://github.com/CSdare/woven-js#readme",
+  "devDependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "webpack": "^3.10.0"
+  }
 }
