@@ -1,9 +1,10 @@
-console.log('hello woven')
+console.log('hello from woven');
 
-const run = require('./src/run');
+const options = require('./src/options');
+const optimal = require('./src/optimal');
+const run = require('./src/run')(options, optimal);
+const configure = require('./src/configure')(options);
+const optimize = require('./src/optimize')(options);
+const connect = require('./src/connect')(options);
 
-
-function Woven() {
-  const options = {};
-  this.run = run.bind(this);
-}
+module.exports = { run, optimize, configure, connect }
