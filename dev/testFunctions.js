@@ -20,5 +20,10 @@ const processSepia = (binaryData, l) => {
   }
 };
 
-module.exports = processSepia;
+const addTen = (num) => {
+  console.log('we got here');
+  return num + 10;
+}
+
+module.exports = { processSepia, addTen };
 
