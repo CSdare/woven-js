@@ -73,8 +73,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__index___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__index__);
 
 
-__WEBPACK_IMPORTED_MODULE_0__index___default.a.run('addTen', 20).then(output => console.log('output from run function is ', output));
-__WEBPACK_IMPORTED_MODULE_0__index___default.a.run('addTen', 30).then(output => console.log('output from run function is ', output));
+__WEBPACK_IMPORTED_MODULE_0__index___default.a.connect();
+
+window.onload = function() {
+  const button = document.getElementById('button');
+  const numbers = Array.from(document.getElementsByClassName('number'));
+  button.onclick = function() {
+    numbers.forEach(node => {
+      let num = Number(node.innerHTML);
+      __WEBPACK_IMPORTED_MODULE_0__index___default.a.run('addTen', num)
+        .then(newNum => node.innerHTML = newNum);
+    });
+  }
+}
+
+
+// setTimeout(woven.run('addTen', 20).then(output => console.log('output from run function is ', output)), 1000);
+
+// woven.run('addTen', 30)
+//   .then(output => console.log('output from run function is ', output));
 
 
 /***/ }),
@@ -88,8 +105,9 @@ const optimal = __webpack_require__(3);
 const run = __webpack_require__(4)(options, optimal);
 const configure = __webpack_require__(5)(options);
 const optimize = __webpack_require__(7)(options);
+const connect = __webpack_require__(8)(options);
 
-module.exports = { run, optimize, configure }
+module.exports = { run, optimize, configure, connect }
 
 /***/ }),
 /* 2 */
@@ -99,8 +117,9 @@ module.exports = {
   pingSize: 100,
   maxThreads: 4,
   alwaysClient: false,
-  alwaysServer: true,
+  alwaysServer: false,
   functionsPath: null,
+  defaults: true,
 }
 
 /***/ }),
@@ -153,6 +172,7 @@ module.exports = function runWrapper(options, optimal) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function configureWrapper(options) {
+  
   return function configure(functionsPath, userOptions) {
     options.functionsPath = functionsPath;
     options.functions = !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
@@ -191,7 +211,18 @@ webpackEmptyContext.id = 6;
 
 module.exports = function optimizeWrapper(options) {
   return function optimize(req, res, next) {
-    if (req.url === '/__woven__') {
+    
+    if (req.url === '/__woven_first__') {
+      // compare options from server with options on client side
+      // need to be more specific about which options are sent
+      options.defaults = false;
+      console.log('back end options before sending:', options);
+      res.json(options);
+    }
+
+
+    else if (req.url === '/__woven__') {
+      console.log('got to optimize');
       const output = options.functions[req.body.funcName](req.body.payload);
       res.json(output);
     }
@@ -200,6 +231,27 @@ module.exports = function optimizeWrapper(options) {
 }
 
 
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+module.exports = function connectWrapper(options) {
+  return function connect() {
+    fetch('/__woven_first__', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ options }),
+    })
+    .then(res => res.json())
+    .then(newOptions => {
+      for (field in options) {
+        options[field] = newOptions[field];
+      }
+      console.log('changed front end options:', options);
+    })
+  }
+}
 
 /***/ })
 /******/ ]);
