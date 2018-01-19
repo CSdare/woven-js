@@ -13,7 +13,6 @@ module.exports = function optimizeWrapper(options) {
       console.log('back end options before sending:', options);
       res.json(options);
     }
- 
 
     else if (req.url === '/__woven__') {
       console.log('got to optimize');
