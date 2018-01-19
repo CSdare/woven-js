@@ -8,7 +8,7 @@ const woven = require('../index');
 app.use(bodyParser.json());
 // how can we incorporate bodyParser into our woven.optimize middleware?
 
-woven.configure(__dirname + '/testFunctions.js', { alwaysServer: true });
+woven.configure(__dirname + '/woven_functions/testFunctions.js', { alwaysServer: true });
 
 app.use(woven.optimize);
 

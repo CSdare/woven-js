@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-
     "test-build": "webpack",
     "start-dev": "node dev/testServer.js"
   },
