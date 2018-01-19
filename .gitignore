@@ -4,5 +4,4 @@ node_modules
 build/*.js
 build/*.svg
 .DS_Store
-package-lock.json
-.env
+package-lock
