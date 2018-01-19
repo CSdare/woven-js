@@ -65,53 +65,75 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__index__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__index___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__index__);
 
 
-__WEBPACK_IMPORTED_MODULE_0__index___default.a.connect();
+var _index = __webpack_require__(1);
 
-window.onload = function() {
-  const button = document.getElementById('button');
-  const numbers = Array.from(document.getElementsByClassName('number'));
-  button.onclick = function() {
-    numbers.forEach(node => {
-      let num = Number(node.innerHTML);
-      __WEBPACK_IMPORTED_MODULE_0__index___default.a.run('addTen', num)
-        .then(newNum => node.innerHTML = newNum);
+woven.connect();
+
+window.onload = function () {
+  // Add 10 functionality
+  var add10Button = document.getElementById('add-10-btn');
+  var numbers = Array.from(document.getElementsByClassName('number'));
+  add10Button.onclick = function () {
+    numbers.forEach(function (node) {
+      var num = Number(node.innerHTML);
+      woven.run('addTen', num).then(function (newNum) {
+        return node.innerHTML = newNum;
+      });
+    });
+  };
+
+  // Fib functionality
+  function calcFib(num) {
+    woven.run('nthFib', num).then(function (fib) {
+      var li = document.createElement('li');
+      li.textContent = fib;
+      fibList.appendChild(li);
     });
   }
-}
 
+  var fibList = document.getElementById('fib-list');
+  var fibNumber = document.getElementById('fib-number');
+  var fibButton = document.getElementById('calc-fib');
+
+  fibButton.addEventListener('click', function () {
+    return calcFib(fibNumber.value || 8);
+  });
+};
 
 // setTimeout(woven.run('addTen', 20).then(output => console.log('output from run function is ', output)), 1000);
 
 // woven.run('addTen', 30)
 //   .then(output => console.log('output from run function is ', output));
 
-
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
 console.log('hello from woven');
 
-const options = __webpack_require__(2);
-const optimal = __webpack_require__(3);
-const run = __webpack_require__(4)(options, optimal);
-const configure = __webpack_require__(5)(options);
-const optimize = __webpack_require__(7)(options);
-const connect = __webpack_require__(8)(options);
+var options = __webpack_require__(2);
+var optimal = __webpack_require__(3);
+var run = __webpack_require__(4)(options, optimal);
+var configure = __webpack_require__(5)(options);
+var optimize = __webpack_require__(7)(options);
+var connect = __webpack_require__(8)(options);
 
-module.exports = { run, optimize, configure, connect }
+module.exports = { run: run, optimize: optimize, configure: configure, connect: connect };
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 module.exports = {
   pingSize: 100,
@@ -119,21 +141,27 @@ module.exports = {
   alwaysClient: false,
   alwaysServer: false,
   functionsPath: null,
-  defaults: true,
-}
+  defaults: true
+};
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 module.exports = {
-  location: null,  // set this way for testing only
-  threads: null,
-}
+  location: null, // set this way for testing only
+  threads: null
+};
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 /**
  * 
@@ -143,7 +171,7 @@ module.exports = {
  */
 
 module.exports = function runWrapper(options, optimal) {
- 
+
   /**
    * @param {string} funcName: string referring to name of a function in functions.js
    * @param {Object} payload: arguments to be passed into the function
@@ -154,25 +182,28 @@ module.exports = function runWrapper(options, optimal) {
     // logic to determine if function sould be run on client or server
     // what order to handle logic for running?
     // options.alwaysServer, options.alwaysClient, optimal.location
-    if (options.alwaysClient || optimal.location === 'client') {/* reference optimal.threads here */} // run web worker pool
+    if (options.alwaysClient || optimal.location === 'client') {} /* reference optimal.threads here */ // run web worker pool
     else if (options.alwaysServer || optimal.location === 'server') {
-      return fetch('/__woven__', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ funcName, payload }),
-      })
-      .then(res => res.json())
-    }
-  }
-}
-
+        return fetch('/__woven__', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ funcName: funcName, payload: payload })
+        }).then(function (res) {
+          return res.json();
+        });
+      }
+  };
+};
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
 module.exports = function configureWrapper(options) {
-  
+
   return function configure(functionsPath, userOptions) {
     options.functionsPath = functionsPath;
     options.functions = !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
@@ -182,11 +213,10 @@ module.exports = function configureWrapper(options) {
         // include code here to test if the type of data passed in is correct for the field
         options[field] = userOptions[field];
         console.log(options);
-      }
-      else return new Error(`${field} is not a configurable option.`);
+      } else return new Error(field + " is not a configurable option.");
     }
-  }
-}
+  };
+};
 
 /***/ }),
 /* 6 */
@@ -202,7 +232,9 @@ webpackEmptyContext.id = 6;
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
 /**
@@ -211,47 +243,44 @@ webpackEmptyContext.id = 6;
 
 module.exports = function optimizeWrapper(options) {
   return function optimize(req, res, next) {
-    
+
     if (req.url === '/__woven_first__') {
       // compare options from server with options on client side
       // need to be more specific about which options are sent
       options.defaults = false;
       console.log('back end options before sending:', options);
       res.json(options);
-    }
-
-
-    else if (req.url === '/__woven__') {
+    } else if (req.url === '/__woven__') {
       console.log('got to optimize');
-      const output = options.functions[req.body.funcName](req.body.payload);
+      var output = options.functions[req.body.funcName](req.body.payload);
       res.json(output);
-    }
-    else next();
-  }
-}
-
-
+    } else next();
+  };
+};
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 module.exports = function connectWrapper(options) {
   return function connect() {
     fetch('/__woven_first__', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ options }),
-    })
-    .then(res => res.json())
-    .then(newOptions => {
-      for (field in options) {
+      body: JSON.stringify({ options: options })
+    }).then(function (res) {
+      return res.json();
+    }).then(function (newOptions) {
+      for (var field in options) {
         options[field] = newOptions[field];
       }
       console.log('changed front end options:', options);
-    })
-  }
-}
+    });
+  };
+};
 
 /***/ })
 /******/ ]);
