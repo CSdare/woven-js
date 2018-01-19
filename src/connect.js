@@ -7,7 +7,7 @@ module.exports = function connectWrapper(options) {
     })
     .then(res => res.json())
     .then(newOptions => {
-      for (field in options) {
+      for (let field in options) {
         options[field] = newOptions[field];
       }
       console.log('changed front end options:', options);

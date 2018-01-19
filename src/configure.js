@@ -3,7 +3,7 @@ module.exports = function configureWrapper(options) {
   return function configure(functionsPath, userOptions) {
     options.functionsPath = functionsPath;
     options.functions = require(options.functionsPath);
-    for (field in userOptions) {
+    for (let field in userOptions) {
       console.log(field, userOptions[field]);
       if (options.hasOwnProperty(field)) {
         // include code here to test if the type of data passed in is correct for the field

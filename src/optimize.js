@@ -14,7 +14,6 @@ module.exports = function optimizeWrapper(options) {
       res.json(options);
     }
 
-
     else if (req.url === '/__woven__') {
       console.log('got to optimize');
       const output = options.functions[req.body.funcName](req.body.payload);
