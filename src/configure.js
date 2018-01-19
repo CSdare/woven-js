@@ -10,8 +10,7 @@ module.exports = function configureWrapper(options) {
     options.functions = require(options.functionsPath);
 
     //add a check for the "devServer" options object property...!
-
-    for (field in userOptions) {
+    for (let field in userOptions) {
       console.log(field, userOptions[field]);
       if (options.hasOwnProperty(field)) {
         if (field === pingSize){
