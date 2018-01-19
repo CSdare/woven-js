@@ -2,14 +2,13 @@ const fs = require('fs');
 
 module.exports = function configureWrapper(options) {
   
-  return function configure(functionsPath, userOptions) {
+  return function configure(functions, userOptions) {
 
-    if (typeof functionsPath !== 'String') {
-      return new Error(`${functionsPath} must be a file path string.`);
+    if (typeof functions !== 'Object') {
+      return new Error(`${functions} must be an export object.`);
     }
 
-    options.functionsPath = functionsPath;
-    options.functions = require(options.functionsPath);
+    options.functions = functions;
 
     //add a check for the 'devServer' options object property...!
     for (let field in userOptions) {
@@ -34,7 +33,7 @@ module.exports = function configureWrapper(options) {
           if (typeof userOptions[field] !== 'Boolean') {
             return new Error(`${field} - incorrect data type.`);
           }
-        } else if (field === 'functionsPath') {
+        } else if (field === 'functions') {
           return new Error(`Use first argument of configure function to assign ${field}.`);
         } else if (field === 'defaults') {
           return new Error(`${field} is not a configurable option.`);
