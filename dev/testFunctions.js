@@ -21,7 +21,6 @@ const processSepia = (binaryData, l) => {
 };
 
 const addTen = (num) => {
-  console.log('we got here');
   return num + 10;
 }
 
