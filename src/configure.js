@@ -9,6 +9,8 @@ module.exports = function configureWrapper(options) {
     options.functionsPath = functionsPath;
     options.functions = require(options.functionsPath);
 
+    //add a check for the "devServer" options object property...!
+
     for (field in userOptions) {
       console.log(field, userOptions[field]);
       if (options.hasOwnProperty(field)) {
@@ -51,7 +53,7 @@ module.exports = function configureWrapper(options) {
     if(options.stringPing !== null){
       let preferredPingSize = options.pingSize;
       let currentPingSize = 0;
-      
+
       //to check file size against expected...
       fs.stat('./pingdata.txt', function(error, stats) {
         currentPingSize = stats.size;

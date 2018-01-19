@@ -5,5 +5,6 @@ module.exports = {
   alwaysClient: false,
   alwaysServer: false,
   functionsPath: null,
+  devServer: null,
   defaults: true,
 }
