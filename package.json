@@ -1,6 +1,6 @@
 {
   "name": "woven-js",
-  "version": "0.1.0",
+  "version": "0.2.3",
   "description": "intelligent multi-threading and server processing",
   "main": "index.js",
   "scripts": {
@@ -18,5 +18,6 @@
     "url": "https://github.com/CSdare/woven-js/issues"
   },
   "homepage": "https://github.com/CSdare/woven-js#readme",
-  "devDependencies": {}
+  "devDependencies": {},
+  "dependencies": {}
 }
