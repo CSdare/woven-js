@@ -4,7 +4,7 @@ module.exports = {
   maxThreads: 4,
   alwaysClient: false,
   alwaysServer: false,
-  functionsPath: null,
+  functions: null,
   devServer: null,
   defaults: true,
 }
