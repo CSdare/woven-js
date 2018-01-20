@@ -7,4 +7,4 @@ const WorkerTask = require('./src/Pool').WorkerTask;
 const connect = require('./src/connect')(options, optimal, Pool);
 const run = require('./src/run')(options, optimal, WorkerTask);
 
-module.exports = { connect, run, Pool, WorkerTask };
+module.exports = { connect, run, WorkerTask };
