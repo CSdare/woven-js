@@ -13,13 +13,14 @@ module.exports = function runWrapper(options, optimal, WorkerTask) {
    */
   
   return function run(funcName, payload) {
+    
     if (options.alwaysClient || (optimal.location === 'client' && !options.alwaysServer)) {
       return new Promise((resolve, reject) => {
         function workerCallback(output) {
           resolve(output);
         }
         const workerTask = new WorkerTask(funcName, payload, workerCallback);
-        options.pool.run(workerTask);
+        options.pool.addWorkerTask(workerTask);
       });
     } else if (options.alwaysServer || optimal.location === 'server') {
       return fetch('/__woven__', {
