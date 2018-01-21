@@ -1,4 +1,4 @@
-function Pool(size) {
+function Pool(size, workerFile) {
   this.taskQueue = [];
   this.workerQueue = [];
   this.poolSize = size;
@@ -12,7 +12,7 @@ function Pool(size) {
 
   this.init = function() {
     for (let i = 0; i < this.poolSize; i++) {
-      this.workerQueue.push(new WorkerThread(this));
+      this.workerQueue.push(new WorkerThread(this, workerFile));
     }
   }
 
@@ -28,14 +28,16 @@ function Pool(size) {
   this.freeWorkerThread.bind(this);
 }
 
-function WorkerThread(pool) {
+function WorkerThread(pool, workerFile) {
   this.pool = pool;
   this.workerTask = {};
+  const _this = this;
 
   this.run = function(workerTask) {
     this.workerTask = workerTask;
     if (this.workerTask.funcName !== null) {
-      const worker = new Worker(/* how do we store worker reference here?*/);
+      // const worker = new Worker(workerFile);
+      const worker = new workerFile();
       worker.addEventListener('message', dummyCallback, false);
       worker.addEventListener('error', (msg, line, fileName) => {
         console.error(msg + `\nerror in worker at line ${line} in ${fileName}`);
@@ -45,10 +47,12 @@ function WorkerThread(pool) {
   }
   
   function dummyCallback(event) {
-    this.workerTask.callback(event.data);
-    this.pool.freeWorkerThread(this);
+    console.log('dummyCallback context is this: ', _this);
+    _this.workerTask.callback(event.data);
+    _this.pool.freeWorkerThread(this);
   }
-
+  
+  // dummyCallback.bind(this);
   this.run.bind(this);
 }
 

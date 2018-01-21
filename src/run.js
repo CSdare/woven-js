@@ -13,12 +13,15 @@ module.exports = function runWrapper(optimal, WorkerTask) {
   
   return function run(funcName, payload) {
     if (optimal.location === 'client') {
+
       return new Promise((resolve, reject) => {
         function workerCallback(output) {
           resolve(output);
         }
         const workerTask = new WorkerTask(funcName, payload, workerCallback);
-        optimal.pool.run(workerTask);
+
+        optimal.pool.addWorkerTask(workerTask);
+
       });
     } else if (optimal.location === 'server') {
       return fetch('/__woven__', {
