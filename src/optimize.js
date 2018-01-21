@@ -3,13 +3,14 @@
  * 
  */
 
-module.exports = function optimizeWrapper(options) {
+module.exports = function optimizeWrapper(options, optimal) {
+  
   return function optimize(req, res, next) {
     
     if (req.url === '/__woven_first__') {
       // compare options from server with options on client side
       // need to be more specific about which options are sent
-      options.defaults = false;
+      optimal.defaults = false;
       console.log('back end options before sending:', options);
       res.json(options);
     }

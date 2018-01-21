@@ -1,6 +1,6 @@
 // const fs = require('fs');
 
-module.exports = function configureWrapper(options) {
+module.exports = function configureWrapper(options, optimal) {
   
   return function configure(functions, userOptions) {
 
