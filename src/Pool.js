@@ -36,7 +36,6 @@ function WorkerThread(pool, workerFile) {
   this.run = function(workerTask) {
     this.workerTask = workerTask;
     if (this.workerTask.funcName !== null) {
-      // const worker = new Worker(workerFile);
       const worker = new workerFile();
       worker.addEventListener('message', dummyCallback, false);
       worker.addEventListener('error', (msg, line, fileName) => {
@@ -49,7 +48,8 @@ function WorkerThread(pool, workerFile) {
   function dummyCallback(event) {
     console.log('dummyCallback context is this: ', _this);
     _this.workerTask.callback(event.data);
-    _this.pool.freeWorkerThread(this);
+    _this.pool.freeWorkerThread(_this);  // changed from this to _this
+    this.terminate(); // terminates current worker thread - this refers to worker, _this refers to workerThread
   }
   
   // dummyCallback.bind(this);
