@@ -33,10 +33,14 @@ module.exports = function configureWrapper(options) {
           if (typeof userOptions[field] !== 'Boolean') {
             return new Error(`${field} - incorrect data type.`);
           }
+        } else if (field === 'devServer'){
+          if (typeof userOptions[field] !== "Number"){
+            return new Error(`${field} - incorrect data type.`);
+          }
         } else if (field === 'functions') {
-          return new Error(`Use first argument of configure function to assign ${field}.`);
+            return new Error(`Use first argument of configure function to assign ${field}.`);
         } else if (field === 'defaults') {
-          return new Error(`${field} is not a configurable option.`);
+            return new Error(`${field} is not a configurable option.`);
         }
         options[field] = userOptions[field];
       } else return new Error(`${field} is not a configurable option`);
@@ -50,19 +54,10 @@ module.exports = function configureWrapper(options) {
 function pingCheck(options) {
   if (options.stringPing !== null) {
     let preferredPingSize = options.pingSize;
-    let currentPingSize = 0;
-
-    //to check file size against expected...
-    fs.stat('./pingdata.txt', function(error, stats) {
-      currentPingSize = stats.size;
-    });
-
+    let currentPingSize = options.stringPing.length();
     //if file size doesn't match preferences, remove it and build new ping that does
     if (preferredPingSize !== currentPingSize) {
-      fs.unlink('pingdata.txt', function (err) {
-        if (err) console.log('error with deleting ping file');
-        console.log('Ping data file deleted!');
-      });
+      options.stringPing = null;
       buildPing(options.pingSize);
     } else console.log('ping size matches dev preferences!');
   } else buildPing(options.pingSize);
@@ -75,11 +70,5 @@ function buildPing(pingSize) {
   for (let i = 0; i < pingSize/2; i++) {
     stringPing += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
   }
-  
-  fs.appendFile('pingdata.txt', stringPing, function (err) {
-    if (err) console.log('error with creating ping file');
-    console.log('Saved!');
-  });
-//need to assign the path to new ping file to options.stringPing...HALP?
-  options.stringPing = './pingdata.txt';
+  options.stringPing = stringPing;
 }

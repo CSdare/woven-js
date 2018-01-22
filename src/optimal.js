@@ -1,4 +1,8 @@
 module.exports = {
-  location: null,  // set this way for testing only
+  location: null,  //client or server// set this way for testing only
+  pool: null,
   threads: null,
+  
+
+   //# of workers
 }
