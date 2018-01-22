@@ -1,11 +1,11 @@
-const fs = require('fs');
+// const fs = require('fs');
 
-module.exports = function configureWrapper(options) {
+module.exports = function configureWrapper(options, optimal) {
   
   return function configure(functions, userOptions) {
 
-    if (typeof functions !== 'Object') {
-      return new Error(`${functions} must be an export object.`);
+    if (typeof functions !== 'object') {
+      throw new Error(`${functions} must be an export object.`);
     }
 
     options.functions = functions;
@@ -14,24 +14,24 @@ module.exports = function configureWrapper(options) {
     for (let field in userOptions) {
       if (options.hasOwnProperty(field)) {
         if (field === 'pingSize') {
-          if (typeof userOptions[field] !== 'Number') {
-            return new Error(`${field} - incorrect data type.`);
+          if (typeof userOptions[field] !== 'number') {
+            throw new Error(`${field} - incorrect data type.`);
           }
         } else if (field === 'stringPing') {
-          if (typeof userOptions[field] !== 'String') {
-            return new Error(`${field} - incorrect data type.`);
+          if (typeof userOptions[field] !== 'string') {
+            throw new Error(`${field} - incorrect data type.`);
           }
         } else if (field === 'maxThreads') {
-          if (typeof userOptions[field] !== 'Number') {
-            return new Error(`${field} - incorrect data type.`);
+          if (typeof userOptions[field] !== 'number') {
+            throw new Error(`${field} - incorrect data type.`);
           }
         } else if(field === 'alwaysClient') {
-          if (typeof userOptions[field] !== 'Boolean') {
-            return new Error(`${field} - incorrect data type.`);
+          if (typeof userOptions[field] !== 'boolean') {
+            throw new Error(`${field} - incorrect data type.`);
           }
         } else if (field === 'alwaysServer') {
-          if (typeof userOptions[field] !== 'Boolean') {
-            return new Error(`${field} - incorrect data type.`);
+          if (typeof userOptions[field] !== 'boolean') {
+            throw new Error(`${field} - incorrect data type.`);
           }
         } else if (field === 'devServer'){
           if (typeof userOptions[field] !== "Number"){
@@ -43,9 +43,9 @@ module.exports = function configureWrapper(options) {
             return new Error(`${field} is not a configurable option.`);
         }
         options[field] = userOptions[field];
-      } else return new Error(`${field} is not a configurable option`);
+      } else throw new Error(`${field} is not a configurable option`);
     }
-    pingCheck(options);
+    // pingCheck(options);
   }
 }
 

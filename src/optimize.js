@@ -3,23 +3,15 @@
  * 
  */
 
-// require in the options.js file and the optimal.js file??
-
-
-// /_woven_first__' => '/_woven_' => server-side process:
-
-module.exports = function optimizeWrapper(options) {
+module.exports = function optimizeWrapper(options, optimal) {
+  
   return function optimize(req, res, next) {
     
     if (req.url === '/__woven_first__') {
-
-    // no "client only"/"server only" setting ---> Woven will evaluate 
-    // the most performant process using runOptimization()
-    if(options.alwaysClient === false && options.alwaysServer === false){
-        combinedOptimization(options,);
-    }
-      options.defaults = false;
-      console.log('developer options before sending:', options);
+      // compare options from server with options on client side
+      // need to be more specific about which options are sent
+      optimal.defaults = false;
+      console.log('back end options before sending:', options);
       res.json(options);
     }
 
