@@ -7,7 +7,5 @@ module.exports = {
   alwaysClient: false,
   alwaysServer: false,
   functions: null,
-  devServer: null,
-  fallback: "server",
-  defaults: true,
+  fallback: "server"
 }
