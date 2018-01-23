@@ -1,11 +1,12 @@
 module.exports = {
-  pingSize: 100,
-  stringPing: null,
   responseSpeed: 500,
   transferSpeed: 500,
-  maxThreads: 4,
   alwaysClient: false,
   alwaysServer: false,
+  devServer: null,
+  fallback: "server",
   functions: null,
-  fallback: "server"
+  maxThreads: 4,
+  pingSize: 100,
+  stringPing: null
 }
