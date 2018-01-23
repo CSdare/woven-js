@@ -7,4 +7,15 @@ const WorkerTask = require('./src/Pool').WorkerTask;
 const connect = require('./src/connect')(optimal, Pool);
 const run = require('./src/run')(optimal, WorkerTask);
 
-module.exports = { connect, run, WorkerTask };
+let instance;
+
+module.exports = function Woven() {
+  if (!instance) {
+    instance = {
+      connect,
+      run,
+      WorkerTask,
+    }
+  }
+  return instance;
+}
