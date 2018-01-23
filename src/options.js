@@ -8,5 +8,5 @@ module.exports = {
   functions: null,
   maxThreads: 4,
   pingSize: 100,
-  stringPing: null,
+  stringPing: null
 }
