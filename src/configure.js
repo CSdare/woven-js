@@ -51,17 +51,17 @@ module.exports = function configureWrapper(options, optimal) {
         options[field] = userOptions[field];
       } else throw new Error(`${field} is not a configurable option`);
     }
-    // pingCheck(options);
+    pingCheck(options);
   }
 }
 
-//options for dynamicPing size:
+//options for dynamicPing size/bytes:
 const pingOptions = {
   tiny: 100,
   small: 4000,
   default: 50000,
   large: 400000,
-  huge: 1000000000
+  huge: 1000000
 }
 
 //first check if the ping data already exists &&
@@ -86,4 +86,5 @@ function buildPing(pingSize) {
     stringPing += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
   }
   options.stringPing = stringPing;
+ }
 }
