@@ -1,5 +1,6 @@
 # WovenJS
 [![npm](https://img.shields.io/npm/v/woven-js.svg?style=plastic)](https://www.npmjs.com/package/woven-js)
+[![npm](https://img.shields.io/npm/dt/package/woven-js.svg?style=plastic)](https://img.shields.io/npm/dt/package/woven-js.svg)
 [![Github All Releases](https://img.shields.io/github/downloads/CSdare/woven-js/total.svg?style=plastic)](https://github.com/CSdare/woven-js)
 [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/CSdare/woven-js.svg?style=plastic)](https://github.com/CSdare/woven-js)
 [![license](https://img.shields.io/github/license/CSdare/woven-js.svg?style=plastic)](https://github.com/CSdare/woven-js)
