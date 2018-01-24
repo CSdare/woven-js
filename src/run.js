@@ -11,7 +11,7 @@ module.exports = function runWrapper(optimal, WorkerTask) {
    * @param {Object} payload: arguments to be passed into the function
    */
   
-  return function run(funcName, payload) {
+  return function run(funcName, ...payload) {
     if (optimal.location === 'client') {
 
       return new Promise((resolve, reject) => {
