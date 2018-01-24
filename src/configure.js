@@ -48,9 +48,8 @@ module.exports = function configureWrapper(options, optimal) {
           if (typeof userOptions[field] !== 'String') {
             return new Error(`${field} - incorrect data type.`);
           }
-        options[field] = userOptions[field];
-      } else throw new Error(`${field} is not a configurable option`);
-    }
+      } options[field] = userOptions[field];
+    } else throw new Error(`${field} is not a configurable option`);
     pingCheck(options);
   }
 }
