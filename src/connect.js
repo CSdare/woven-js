@@ -10,16 +10,13 @@ module.exports = function connectWrapper(optimal, Pool, performance) {
     .then(res => res.json())
     .then(data => {
       const clientData = {
-        responseSpeed: data.pingMarkerServer - pingMarkerClient,
-        dynamicSpeed: Date.now() - data.pingMarkerServer,
+        dynamicSpeed: Date.now() - pingMarkerClient,
         userAgent: navigator.userAgent, // risky
         networkSpeed: null,
         threads: navigator.hardwareConcurrency,
         browser: null,
         missingDeviceInfo: false,
-        responseMin: data.responseMin,
-        dynamicMin: data.dynamicMin,
-        pingMarkerServer: data.pingMarkerServer,
+        dynamicMax: data.dynamicMax,
         maxThreads: data.maxThreads,
         fallback: data.fallback,
         alwaysClient: data.alwaysClient,
