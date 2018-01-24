@@ -1,6 +1,5 @@
 function combinedOptimization(clientData, optimal) {
-
-  if (clientData.alwaysClient = false) networkCheck();
+  if (clientData.alwaysClient === false) networkCheck();
   if (optimal.location === 'client') {
     browserCheck();
     threadCheck();
