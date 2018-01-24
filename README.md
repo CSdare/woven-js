@@ -4,7 +4,7 @@
 [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/CSdare/woven-js.svg?style=plastic)](https://github.com/CSdare/woven-js)
 [![license](https://img.shields.io/github/license/CSdare/woven-js.svg?style=plastic)](https://github.com/CSdare/woven-js)
 [![GitHub release](https://img.shields.io/github/release/CSdare/woven-js.svg?style=plastic)](https://github.com/CSdare/woven-js)
-[![GitHub Release Date](https://img.shields.io/github/release-date/CSdare/woven-js.svg?style=plastic)](https://github.com/CSdare/woven-js) 
+[![GitHub Release Date](https://img.shields.io/github/release-date/CSdare/woven-js.svg?style=plastic)](https://github.com/CSdare/woven-js)
 [![npm](https://img.shields.io/npm/dt/package/woven-js.svg?style=plastic)](https://img.shields.io/npm/dt/package/woven-js.svg)
 
 <p align="center">
