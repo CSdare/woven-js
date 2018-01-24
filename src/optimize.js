@@ -17,13 +17,10 @@ module.exports = function optimizeWrapper(options) {
           ping: null
         });
       } else {
-        const pingMarkerServer = Date.now();
         res.json({
           alwaysClient: false,
           alwaysServer: false,
-          responseMin: options.responseMin,
-          dynamicMin: options.dynamicMin,
-          pingMarkerServer: pingMarkerServer,
+          dynamicMax: options.dynamicMax,
           ping: options.stringPing,
           maxThreads: options.maxThreads,
           fallback: options.fallback,
@@ -32,7 +29,7 @@ module.exports = function optimizeWrapper(options) {
 
     //recieving route for run() function calls where server is the optimal location
     } else if (req.url === '/__woven__') {
-      const output = options.functions[req.body.funcName](req.body.payload);
+      const output = options.functions[req.body.funcName](JSON.parse(req.body.payload));
       res.json(output);
     }
     else next();
