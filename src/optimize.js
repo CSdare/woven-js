@@ -14,8 +14,8 @@ module.exports = function optimizeWrapper(options) {
 
     // no "client only"/"server only" setting ---> Woven will evaluate 
     // the most performant process using runOptimization()
-    if(options.alwaysClient === false && options.alwaysServer === false){
-      if(!clientData.dynamicPing){
+    if (options.alwaysClient === false && options.alwaysServer === false) {
+      if (!clientData.dynamicPing) {
         sendDynamicPing(options.stringPing);
       }
       combinedOptimization(options, clientData, optimal);
@@ -26,11 +26,11 @@ module.exports = function optimizeWrapper(options) {
     }
 
     //"client only" -- run threadCheck(), update options obj, always route to client
-    if (options.alwaysClient === true){
+    if (options.alwaysClient === true) {
       threadCheck(clientinfo.cores, clientinfo.browser);
       optimal.location = "client";
     //"server only" -- always route to sever functionality
-    }else if(options.alwaysServer === true){
+    } else if (options.alwaysServer === true) {
       const output = options.functions[req.body.funcName](req.body.payload);
       res.json(output);
     }
@@ -59,7 +59,7 @@ const clientData = {
 };
 
 //send the dynamic ping string:
-function sendDynamicPing(options){
+function sendDynamicPing(options) {
   let start = Date.now();
   res.json(stringPing);
   
@@ -67,7 +67,7 @@ function sendDynamicPing(options){
 };
 
 //run browser, network, thread, and troubleshoot and update optimal obj
-function combinedOptimization(options, clientData, optimal){
+function combinedOptimization(options, clientData, optimal) {
 
   browserCheck(clientData);
   networkCheck(options,clientData);
@@ -82,10 +82,10 @@ function combinedOptimization(options, clientData, optimal){
     let firstIndex = Infinity;
     let browser = null;
   
-    if(clientData.browser === null || undefined){
+    if (clientData.browser === null || undefined) {
       clientData.missingDeviceInfo = true; 
       next();
-    }else if (clientData.browser){
+    } else if (clientData.browser) {
     //if browser information is populated, determine the primary session
       for (let i = 0; i < browserOptions.length; i++) {
         if (clientData.userAgent.includes(browserOptions[i])) {
@@ -97,7 +97,7 @@ function combinedOptimization(options, clientData, optimal){
           }
         }
       }
-    }else{
+    } else {
       next();
     }
   }
@@ -105,17 +105,17 @@ function combinedOptimization(options, clientData, optimal){
   //networkCheck()
   //should extrapolate network quality from both
   //standard ping && dynamic ping...
-  function networkCheck(options, clientData){
-    if(clientData.pingSpeed > options.responseSpeed){
+  function networkCheck(options, clientData) {
+    if(clientData.pingSpeed > options.responseSpeed) {
       //if client standard ping is slow
       clientData.networkSpeed = false;
-    }else if(clientData.dynamicSpeed > options.transferSpeed){
+    } else if (clientData.dynamicSpeed > options.transferSpeed) {
       //if client dynamic ping is slow
       clientData.networkSpeed = false;
-    }else if(clientData.dynamicPing === null || undefined){
+    } else if (clientData.dynamicPing === null || undefined) {
       //if client dynamic ping did not run properly
       clientData.missingDeviceInfo = true;
-    }else{
+    } else {
       //both standard ping and dynamic ping are reasonably fast
       next();
     }
@@ -128,7 +128,7 @@ function combinedOptimization(options, clientData, optimal){
     let idealThreads = 0;
 
   //determine optimal # and assign
-  if(options.threads !== null){
+  if (options.threads !== null) {
   if (clientData.browser === 'Chrome') {
     if (options.maxThreads > 60) optimal.threads = 25;
       else optimal.threads = options.maxThreads;
@@ -137,10 +137,10 @@ function combinedOptimization(options, clientData, optimal){
     if (threads > 20) { 
       optimal.threads = 14;
     } else optimal.threads = threads;
-  }else if (clientData.browser === 'Opera') {
+  } else if (clientData.browser === 'Opera') {
     if (threads > 16) optimal.threads = 10;
       else optimal.threads = threads;
-  }else if (clientData.browser){}
+  } else if (clientData.browser){}
       //add IE and Edge
       else optimal.threads = 4;
   }
@@ -158,12 +158,12 @@ function combinedOptimization(options, clientData, optimal){
     }
     //if dev options exceed recommendations given client browser -->
     //reduce threads to below threshold...
-    if(clientData.missingDeviceInfo === true) {
+    if (clientData.missingDeviceInfo === true) {
       console.log("Warning: missing client device data");
       optimal.location = options.fallback;
-    }else if(options.maxThreads > ideal[clientData.browser]){
+    } else if (options.maxThreads > ideal[clientData.browser]) {
       optimal.threads = ideal[clientData.browser];
-    }else{
+    } else {
       optimal.threads = options.maxThreads;
     }
     console.log('will be processed here: ', optimal.location);
