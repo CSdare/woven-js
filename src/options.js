@@ -1,11 +1,11 @@
 module.exports = {
-  responseMin: 500,
-  dynamicMin: 500,
   alwaysClient: false,
   alwaysServer: false,
+  dynamicMin: 500,
   fallback: 'server',
   functions: null,
   maxThreads: 12,
   pingSize: 100,
-  stringPing: null
+  responseMin: 500,
+  stringPing: null,
 }
