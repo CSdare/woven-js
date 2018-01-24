@@ -3,7 +3,7 @@ module.exports = {
   transferMin: 500,
   alwaysClient: false,
   alwaysServer: false,
-  fallback: "server",
+  fallback: 'server',
   functions: null,
   maxThreads: 4,
   pingSize: 100,
