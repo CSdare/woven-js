@@ -126,11 +126,11 @@ function pingCheck(options) {
       options.stringPing = '';
       buildPing(options.pingSize);
     } else console.log('ping size matches dev preferences!');
-  } else buildPing(options.pingSize);
+  } else buildPing(options.pingSize, options);
 }
 
 //function to generate ping according to data size preferences:
-function buildPing(pingSize) {
+function buildPing(pingSize, options) {
   let stringPing = '';
   let possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   for (let i = 0; i < pingSize / 2; i++) {
