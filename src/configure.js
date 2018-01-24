@@ -10,6 +10,8 @@ const pingOptions = {
 module.exports = function configureWrapper(options, optimal) {
   
   return function configure(functions, userOptions) {
+    
+    if (arguments.length === 0) throw new Error('configure requires a functions argument');
 
     if (typeof functions !== 'object') {
       throw new Error(`${functions} must be an export object.`);
@@ -65,7 +67,7 @@ function pingCheck(options) {
     //if file size doesn't match preferences, remove it and build new ping that does
     if (preferredPingSize !== currentPingSize) {
       options.stringPing = '';
-      buildPing(options.pingSize);
+      buildPing(options.pingSize, options);
     } else console.log('ping size matches dev preferences!');
   } else buildPing(options.pingSize, options);
 }
