@@ -1,6 +1,6 @@
 {
   "name": "woven-js",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "intelligent multi-threading and server processing",
   "main": "index.js",
   "scripts": {
