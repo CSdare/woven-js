@@ -1,31 +1,13 @@
-// const fs = require('fs');
-
-/*
-module.exports = {
-  responseMin: 500,
-  dynamicMin: 500,
-  alwaysClient: false,
-  alwaysServer: false,
-  fallback: 'server',
-  functions: null,
-  maxThreads: 12,
-  pingSize: 100,
-  stringPing: null
+//options for dynamicPing size/bytes:
+const pingOptions = {
+  tiny: 100,
+  small: 4000,
+  medium: 50000,
+  large: 400000,
+  huge: 1000000
 }
-*/
-
-
 
 module.exports = function configureWrapper(options, optimal) {
-
-  //options for dynamicPing size/bytes:
-  const pingOptions = {
-    tiny: 100,
-    small: 4000,
-    default: 50000,
-    large: 400000,
-    huge: 1000000
-  }
   
   return function configure(functions, userOptions) {
 
@@ -70,44 +52,6 @@ module.exports = function configureWrapper(options, optimal) {
       }
       options[field] = userOptions[field];
     }
-    //   if (options.hasOwnProperty(field)) {
-    //     if (field === 'pingSize') {
-    //       if (typeof userOptions[field] !== 'number') {
-    //         throw new Error(`${field} - incorrect data type.`);
-    //       }
-    //     } else if (field === 'stringPing') {
-    //       if (typeof userOptions[field] !== 'string') {
-    //         throw new Error(`${field} - incorrect data type.`);
-    //       }
-    //     } else if (field === 'responseMin') {
-    //       if (typeof userOptions[field] !== 'Number') {
-    //         return new Error(`${field} - incorrect data type.`);
-    //       }
-    //     } else if (field === 'dynamicMin') {
-    //       if (typeof userOptions[field] !== 'Number') {
-    //         return new Error(`${field} - incorrect data type.`);
-    //       }
-    //     } else if (field === 'maxThreads') {
-    //       if (typeof userOptions[field] !== 'number') {
-    //         throw new Error(`${field} - incorrect data type.`);
-    //       }
-    //     } else if(field === 'alwaysClient') {
-    //       if (typeof userOptions[field] !== 'boolean') {
-    //         throw new Error(`${field} - incorrect data type.`);
-    //       }
-    //     } else if (field === 'alwaysServer') {
-    //       if (typeof userOptions[field] !== 'boolean') {
-    //         throw new Error(`${field} - incorrect data type.`);
-    //       }
-    //     } else if (field === 'functions') {
-    //         return new Error(`Use first argument of configure function to assign ${field}.`);
-    //     } else if (field === 'fallback') {
-    //       if (typeof userOptions[field] !== 'string') {
-    //         return new Error(`${field} - incorrect data type.`);
-    //       }
-    //     options[field] = userOptions[field];
-    //   } else throw new Error(`${field} is not a configurable option`);
-    // }
     pingCheck(options);
   }
 }
@@ -115,10 +59,10 @@ module.exports = function configureWrapper(options, optimal) {
 //first check if the ping data already exists &&
 //whether it is the right size according to preferences...
 function pingCheck(options) {
+  if (typeof options.pingSize === 'string') {
+    options.pingSize = pingOptions[options.pingSize];
+  }
   if (options.stringPing !== null) {
-    if (typeof options.pingSize === 'string') {
-      options.pingSize = pingOptions[options.pingSize];
-    }
     const preferredPingSize = options.pingSize;
     const currentPingSize = options.stringPing.length * 2;
     //if file size doesn't match preferences, remove it and build new ping that does
@@ -137,5 +81,5 @@ function buildPing(pingSize, options) {
     stringPing += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
   }
   options.stringPing = stringPing;
-  console.log(options.stringPing);
+  // console.log(options.stringPing);
 }
