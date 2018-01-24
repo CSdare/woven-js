@@ -25,7 +25,7 @@ module.exports = function configureWrapper(options, optimal) {
         case 'alwaysServer':
           if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
           break;
-        case 'dynamicMin':
+        case 'dynamicMax':
           if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
           break;
         case 'fallback':
@@ -40,9 +40,6 @@ module.exports = function configureWrapper(options, optimal) {
         case 'pingSize':
           if (typeof userOptions[field] !== 'number' && !pingOptions.hasOwnProperty(userOptions[field])) throw new Error(`${field} - incorrect data type.`);
           if (userOptions[field] > 10000000) throw new Error('pingSize is too large; should be 10M bytes or less');
-          break;
-        case 'responseMin':
-          if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
           break;
         case 'stringPing':
           throw new Error(`${field} is not a configurable option`);
