@@ -1,5 +1,21 @@
 // const fs = require('fs');
 
+/*
+{
+  responseMin: 500,
+  transferMin: 500,
+  alwaysClient: false,
+  alwaysServer: false,
+  fallback: 'server',
+  functions: null,
+  maxThreads: 4,
+  pingSize: 100,
+  stringPing: null
+}
+*/
+
+
+
 module.exports = function configureWrapper(options, optimal) {
   
   return function configure(functions, userOptions) {
