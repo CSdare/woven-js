@@ -1,4 +1,8 @@
 # WovenJS
+[![Github file size](https://img.shields.io/github/size/webcaetano/craft/build/phaser-craft.min.js.svg?style=plastic)](https://github.com/CSdare/woven-js)
+[![Github Releases](https://img.shields.io/github/downloads/atom/atom/latest/total.svg?style=plastic)]([![Github file size](https://img.shields.io/github/size/webcaetano/craft/build/phaser-craft.min.js.svg?style=plastic)](https://github.com/CSdare/woven-js))
+[![npm](https://img.shields.io/npm/v/npm.svg?style=plastic)]([![npm](https://img.shields.io/npm/l/express.svg?style=plastic)]([![npm](https://img.shields.io/npm/dw/localeval.svg?style=plastic)](https://www.npmjs.com/package/woven-js)))
+[![npm](https://img.shields.io/npm/l/express.svg?style=plastic)]([![npm](https://img.shields.io/npm/dw/localeval.svg?style=plastic)](https://www.npmjs.com/package/woven-js))
 [![npm](https://img.shields.io/npm/dw/localeval.svg?style=plastic)](https://www.npmjs.com/package/woven-js)
 <p align="center">
   <img src="https://user-images.githubusercontent.com/4038732/35308567-17f72930-005d-11e8-9134-c21c741f0cc7.png">
