@@ -1,4 +1,5 @@
 # WovenJS
+[![npm](https://img.shields.io/npm/v/npm.svg?style=plastic)](https://www.npmjs.com/package/woven-js)
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/4038732/35308567-17f72930-005d-11e8-9134-c21c741f0cc7.png">
