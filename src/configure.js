@@ -23,9 +23,11 @@ module.exports = function configureWrapper(options, optimal) {
       switch (field) {
         case 'alwaysClient':
           if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
+          options.alwaysServer = false;
           break;
         case 'alwaysServer':
           if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
+          options.alwaysClient = false;
           break;
         case 'dynamicMax':
           if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
@@ -68,7 +70,7 @@ function pingCheck(options) {
     if (preferredPingSize !== currentPingSize) {
       options.stringPing = '';
       buildPing(options.pingSize, options);
-    } else console.log('ping size matches dev preferences!');
+    }
   } else buildPing(options.pingSize, options);
 }
 
