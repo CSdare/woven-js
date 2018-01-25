@@ -1,4 +1,5 @@
 # WovenJS
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/4038732/35308567-17f72930-005d-11e8-9134-c21c741f0cc7.png">
 </p>
@@ -173,5 +174,8 @@ module.exports = {
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
+<<<<<<< HEAD
 
 So long and thanks for all the fish!
+=======
+>>>>>>> e5f5b9d0e7fd380d89cf76e8703f1b50727d5a2d
