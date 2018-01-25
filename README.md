@@ -8,11 +8,11 @@
 [![GitHub Release Date](https://img.shields.io/github/release-date/CSdare/woven-js.svg?style=plastic)](https://github.com/CSdare/woven-js)
 
 
-<p align="center">
+<p align="left">
   <img src="https://user-images.githubusercontent.com/4038732/35308567-17f72930-005d-11e8-9134-c21c741f0cc7.png">
 </p>
 
-WovenJS abstracts away the architectural complexity of multi-threading and utilizes optimization metrics to guide your application through the most performant process. Based on client technical information and network strength, WovenJS dynamically runs intensive processes on the server or on the client. When running on the client, WovenJS leverages the Web Workers API to prevent blocking of the web browser's single thread.
+WovenJS abstracts away the architectural complexity of multi-threading and utilizes optimization metrics to guide your application through the most performant process. Based on client hardware information and network strength, WovenJS dynamically runs intensive processes on the server or on the client. When running on the client, WovenJS leverages the Web Workers API to prevent blocking of the web browser's single thread.
 
 
 ## Installing
@@ -32,6 +32,18 @@ const woven = require('woven-js');
 const functions = require(/* "path to your functions file" */);
 
 woven.configure(functions, /* { client options } */);
+app.use(woven.optimize);
+
+```
+In the front end of your App:
+
+```javascript
+
+import Woven from 'woven-js/client';
+import wovenWorker from 'worker-loader?inline=true&name=woven-worker.js!babel-loader!woven-loader!<path to your functions>';
+const woven = new Woven();
+
+woven.connect(wovenWorker);ns } */);
 app.use(woven.optimize);
 
 ```
