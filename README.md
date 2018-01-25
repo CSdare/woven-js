@@ -22,7 +22,7 @@ First `npm install` woven-js in your web application
 
 ```
 npm install --save woven-js
-npm install --save-dev woven-loader worker-loader babel-loader
+npm install --save-dev woven-loader worker-loader babel-loader webpack
 ```
 
 Next, in your express server file, insert the following:
@@ -54,7 +54,7 @@ woven.run('function name', payload)
   });
 
 ```
-**Be sure** to include the path to your functions file in the wovenWorker import! This gets your functions into the bundle.
+**Be sure** to include the path to your functions file in the wovenWorker import! This gets your functions into the bundle. Also be sure you have Webpack installed as a dev dependency, as `woven-loader` relies on Webpack to work.
 
 ## Usage
 
@@ -129,15 +129,8 @@ module.exports = {
 
 </p>
 
-
-
 ## Contributing
-
-
-
-## Versioning
-
- 
+We welcome contributions. If you'd like to contribute, please submit a pull request.
 
 ## Authors
 <table>
@@ -186,5 +179,4 @@ module.exports = {
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
-So long and thanks for all the fish!
-
+Thanks to Jos Dirksen, whose threadpool inspired our Web Worker pooling setup. Also thanks to the Webpack team for their neato `worker-loader`.
