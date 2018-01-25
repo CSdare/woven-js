@@ -82,5 +82,4 @@ function buildPing(pingSize, options) {
     stringPing += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
   }
   options.stringPing = stringPing;
-  // console.log(options.stringPing);
 }
