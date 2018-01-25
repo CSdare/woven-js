@@ -29,7 +29,7 @@ module.exports = function optimizeWrapper(options) {
 
     //recieving route for run() function calls where server is the optimal location
     } else if (req.url === '/__woven__') {
-      const output = options.functions[req.body.funcName](JSON.parse(req.body.payload));
+      const output = options.functions[req.body.funcName](...req.body.payload);
       res.json(output);
     }
     else next();
