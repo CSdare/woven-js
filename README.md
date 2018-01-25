@@ -21,7 +21,7 @@ WovenJS abstracts away the architectural complexity of multi-threading and utili
 First `npm install` woven-js in your web application 
 
 ```
-npm install woven-js --save
+npm install --save woven-js
 npm install --save-dev woven-loader worker-loader babel-loader
 ```
 
@@ -31,98 +31,101 @@ Next, in your express server file, insert the following:
 
 const app = require('express')();
 const woven = require('woven-js');
-const functions = require(/* "path to your functions file" */);
+const functions = require(/* 'path to your functions file' */);
 
-woven.configure(functions, /* { client options } */);
+woven.configure(functions, { /* client options */ });
 app.use(woven.optimize);
 
 ```
-In the front end of your App:
+In the front end of your app:
 
 ```javascript
 
 import Woven from 'woven-js/client';
 import wovenWorker from 'worker-loader?inline=true&name=woven-worker.js!babel-loader!woven-loader!<path to your functions>';
+
 const woven = new Woven();
 
 woven.connect(wovenWorker);
 
 woven.run('function name', payload)
-  .then(output => /* do something with output */)
+  .then(output => {
+    /* do something with output */
+  });
 
 ```
+**Be sure** to include the path to your functions file in the wovenWorker import! This gets your functions into the bundle.
+
 ## Usage
 
 <p>
   <img src="https://user-images.githubusercontent.com/4038732/35308543-0315f870-005d-11e8-82fa-17aede333138.png">
   &nbsp &nbsp &nbsp &nbsp
 
-  The Woven configure() method links the project's pure functions with the Woven thread management system.
+The `woven.configure()` method links the back end with the project's pure functions.
 
 ```javascript
-  woven.configure(functions, /* { client options } */);
+woven.configure(functions, { /* client options */ });
 ```
-  The options object accessible through the configure method also allows for developer customizations:
+The options object accessible through the configure method also allows for developer customizations:
  
 ```javascript
 module.exports = {
   alwaysClient: false,
   alwaysServer: false,
-  dynamicMin: 10000,
+  dynamicMax: 10000,
   fallback: 'server',
-  functions: '/functions.js',
   maxThreads: 12,
-  pingSize: small,
-  stringPing: null,
+  pingSize: 'small',
 }
 ```
 
 #### Developer Customization Options:
 
-  - **alwaysClient/alwaysServer:** An optimization override to have the application functionality processed on only the server or the client as opposed to alternating between processing locations according to the Woven optimal performance heuristic. 
+  - **alwaysClient/alwaysServer:** An optimization override to run processes only on the server or the client, as opposed to letting the WovenJS optimal performance heuristic decide. 
 
-  - **dynamicMin:** Woven's dynamic ping is used to determine the  data transmission speed of your server->client connection. This property allows you to set a minimum response time in milliseconds. If the dynamic ping is slower than this threshold the client/server data transmission speed will be flagged as insufficiently performant.
+  - **dynamicMax:** WovenJS's dynamic ping is used to determine the data transmission speed of your server->client connection. This property allows you to set a minimum response time in milliseconds. If the dynamic ping is slower than this threshold, the client will be used for processing.
 
-  - **fallback:** In the event that the optimization process fails Woven will route to the fallback assigned here. Unless modified by the developer the default fallback is to process on the server.
+  - **fallback:** In the event that the optimization process fails, WovenJS will route to the fallback assigned here. Unless modified by the developer the default fallback is to process on the server.
 
-  - **maxThreads:** A developer override to set the maximum # of threads that can be created for a given client (thread number corrosponds with the number of generated web workers).
+  - **maxThreads:** A developer override to set the maximum # of threads that can be created for a given client (thread number corrosponds with the number of generated Web Workers).
 
-  - **pingSize:** Use this property to set an exact size for the dynamic ping data in bytes or choose between Woven's preset options: tiny(100bytes), small(4kB), default(50kB), large(400kB), huge(1MB).
+  - **pingSize:** Use this property to set an exact size for the dynamic ping data in bytes or choose between WovenJS's preset options: `'tiny'`(100bytes), `'small'`(4kB), `'medium'`(50kB), `'large'`(400kB), or `'huge'`(1MB).
 
   Make sure that your server/application can handle the larger data transfer (400KB-1MB) before using the large/huge ping size presets.
-
-  The **stringPing** property is used for storing the dynamic ping data and cannot be customized.
   
   <img src="https://user-images.githubusercontent.com/4038732/35308546-05bdf154-005d-11e8-9877-ceabb6a07424.png">
 
-  The Woven connect() method is invoked on the client side to establish a connection between the client and the server. 
+  The `woven.connect()` method is invoked on the client side to establish a connection between the client and the server. 
 
   ```javascript
-  woven.connect(/*{ workerReference }*/);
+  woven.connect(/* workerFile */);
   ```
 
-  connect() triggers the Woven’s optimize middleware to initialize optimization settings for each client’s connection. Additionally it takes in the reference to the imported web workers file so that Woven can spawn workers as needed.
+  `woven.connect()` triggers the WovenJS’s optimize middleware to set the optimization configuration for each client’s connection. Additionally it takes in the reference to the imported Web Workers file so that WovenJS can spawn workers as needed.
 
   <img src="https://user-images.githubusercontent.com/4038732/35308554-09e7228c-005d-11e8-9329-f49ab7580292.png">
 
-  Woven runs a customizable dynamic ping which sends autogenerated data to capture data transmission speed for a given client connection. The dynamic ping data is meant to be proportionately sized to the application's functonality (i.e. the dynamic ping might be set to roughly the size of a JPG for an app that relies heavily on image file transfers). 
+  WovenJS sends an auto-generated dynamic ping to capture data transmission speed for each client's connection. The dynamic ping should be proportionate to the application's functonality (for example, set the dynamic ping to the size of a JPG for an app that relies heavily on image file transfers). 
   
-  If the dynamic ping is slower than the *dynamicMin* threshold set by the developer then the client/server transmission speed for that client will be flagged as insufficiently performant. The results of the dynamic ping are factored into the Woven performance optimization heuristic.
+  If the dynamic ping is slower than the `dynamicMax` threshold, the client will be used for processing. If it's faster, the server will be used.
   
   <img src="https://user-images.githubusercontent.com/4038732/35308551-07f95ea4-005d-11e8-8d81-4b8ade2db02f.png">
   
-  Woven's optimization process evaluates the most performant processing location depending on the hardware, software, and network capabilities of the client-side device. Woven will automatically route processing to the server or the client depending on what location will result in the fastest most performant client experience.
+  WovenJS's optimization process evaluates the most performant processing location depending on the hardware, software, and network capabilities of the client-side device. WovenJS will automatically route processing to the server or the client depending on what location will result in the fastest most performant client experience.
 
   <img src="https://user-images.githubusercontent.com/4038732/35312963-d4709d20-0072-11e8-80f2-57423e8ac1d1.png">
  
-  Use the Woven *run()* function wherever you want to run one of the functions in your pure functions file. Woven will decide where to run the function based on the optimization heuristic. 
+  Use the `woven.run()` function wherever you want to run one of the functions in your pure functions file. WovenJS will decide where to run the function based on the optimization heuristic. 
 
   ```javascript
-  woven.run('function name', payload...)
-  .then(output => /* do something with output */)
+  woven.run('function name', payload, ...moreArgs)
+    .then(output => {
+      /* do something with output */
+    });
   ```
   
-  The first argument passed to run() is the name of the function as a string. Next you can pass in any arguments that your function will take. You can pass in as many arguments as you like. run() always returns a *promise*, so you can chain *.then* on to woven.run to utilize the output.
+  The first argument passed to `woven.run()` is the name of the function as a string. Next you can pass in any arguments that your function will take. You can pass in as many arguments as you like. `woven.run()` always returns a *promise*, so you can chain `.then()` on to `woven.run()` to utilize the output.
 
 </p>
 
