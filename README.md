@@ -151,7 +151,7 @@ module.exports = {
       <td align="center" valign="top">
         <img width="150" height="150" src="https://user-images.githubusercontent.com/4038732/35314688-affa1d36-007c-11e8-89c2-2492d174b7dc.jpg">
         <br>
-        <a href="https://github.com/erikwlarsen">Eric Larson</a>
+        <a href="https://github.com/erikwlarsen">Erik Larsen</a>
         <p></p>
         <br>
         <p></p>
