@@ -28,6 +28,7 @@ npm install --save-dev woven-loader worker-loader babel-loader webpack
 Next, in your express server file, insert the following:
 
 ```javascript
+// server.js
 
 const app = require('express')();
 const woven = require('woven-js');
@@ -40,6 +41,7 @@ app.use(woven.optimize);
 In the front end of your app:
 
 ```javascript
+// app.js
 
 import Woven from 'woven-js/client';
 import wovenWorker from 'worker-loader?inline=true&name=woven-worker.js!babel-loader!woven-loader!<path to your functions>';
@@ -55,6 +57,22 @@ woven.run('function name', payload)
 
 ```
 **Be sure** to include the path to your functions file in the wovenWorker import! This gets your functions into the bundle. Also be sure you have Webpack installed as a dev dependency, as `woven-loader` relies on Webpack to work.
+
+In order to work properly, your `functions.js` file will need to contain only pure functions that can run in Node or on the browser. Avoid relying on core Node or browser libraries. Also, your functions file will need to export all of its functions:
+
+```
+// functions.js
+
+const funcOne = (a, b) => {
+  return a + b;
+}
+
+const funcTwo = (a) => {
+  return a * 2;
+}
+
+module.exports = { funcOne, funcTwo };
+```
 
 ## Usage
 
