@@ -46,7 +46,6 @@ function WorkerThread(pool, workerFile) {
   }
   
   function dummyCallback(event) {
-    console.log('dummyCallback context is this: ', _this);
     _this.workerTask.callback(event.data);
     _this.pool.freeWorkerThread(_this);  // changed from this to _this
     this.terminate(); // terminates current worker thread - this refers to worker, _this refers to workerThread

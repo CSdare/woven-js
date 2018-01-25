@@ -182,8 +182,3 @@ module.exports = {
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
-<<<<<<< HEAD
-
-So long and thanks for all the fish!
-=======
->>>>>>> e5f5b9d0e7fd380d89cf76e8703f1b50727d5a2d

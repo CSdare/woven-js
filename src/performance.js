@@ -5,7 +5,7 @@ function combinedOptimization(clientData, optimal) {
     threadCheck();
   }
   // troubleshoot();
-  console.log(`optimized location is: ${optimal.location} with ${optimal.threads} threads.`);
+  console.info(`optimized location is: ${optimal.location} with ${optimal.threads} threads.`);
   
   function browserCheck() {
     let browserOptions = ['Chrome', 'Firefox', 'Safari', 'Opera', 'IE'];
