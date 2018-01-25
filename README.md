@@ -67,7 +67,7 @@ module.exports = {
 }
 ```
 
-  ####Developer Customization Options:
+#### Developer Customization Options:
 
   - **alwaysClient/alwaysServer:** An optimization override to have the application functionality processed on only the server or the client as opposed to alternating between processing locations according to the Woven optimal performance heuristic. 
 
@@ -111,7 +111,7 @@ module.exports = {
  
 
   run()...
-  
+
 </p>
 
 
