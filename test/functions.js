@@ -19,7 +19,6 @@ const processSepia = (binaryData, l) => {
 };
 
 const addTen = (num) => {
-  console.log('we got here');
   return num + 10;
 }
 
@@ -29,4 +28,12 @@ const nthFib = num => {
   return nthFib(num - 1) + nthFib(num - 2);
 }
 
-module.exports = { processSepia, addTen, nthFib };
+const addAll = (...rest) => {
+  return rest.reduce((acc, val) => acc + val);
+}
+
+const addThree = (a, b, c) => {
+  return a + b + c;
+}
+
+module.exports = { processSepia, addTen, nthFib, addAll, addThree };

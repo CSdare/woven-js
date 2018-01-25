@@ -9,12 +9,23 @@ describe('Configure function tests', () => {
   
   before(() => {
     woven.configure(functions, {
-      alwaysClient: true,
+      alwaysClient: false,
       alwaysServer: true,
       dynamicMax: 10000,
       fallback: 'client',
       maxThreads: 40,
       pingSize: 'medium',
+    });
+  });
+
+  after(() => {
+    woven.configure(functions, {
+      alwaysClient: false,
+      alwaysServer: false,
+      dynamicMax: 500,
+      fallback: 'server',
+      maxThreads: 12,
+      pingSize: 100,
     });
   });
 
@@ -26,7 +37,7 @@ describe('Configure function tests', () => {
     });
 
     it('correctly configures options object', () => {
-      options.alwaysClient.should.equal(true);
+      options.alwaysClient.should.equal(false);
       options.alwaysServer.should.equal(true);
       options.dynamicMax.should.equal(10000);
       options.fallback.should.equal('client');
@@ -112,3 +123,5 @@ describe('Configure function tests', () => {
     });
   });
 });
+
+// restore defaults
