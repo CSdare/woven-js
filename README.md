@@ -1,6 +1,6 @@
 # WovenJS
 
-<p align="center">
+<p align="left">
   <img src="https://user-images.githubusercontent.com/4038732/35308567-17f72930-005d-11e8-9134-c21c741f0cc7.png">
 </p>
 
