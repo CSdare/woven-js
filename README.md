@@ -60,7 +60,7 @@ woven.run('function name', payload)
 
 In order to work properly, your `functions.js` file will need to contain only pure functions that can run in Node or on the browser. Avoid relying on core Node or browser libraries. Also, your functions file will need to export all of its functions:
 
-```
+```javasript
 // functions.js
 
 const funcOne = (a, b) => {
