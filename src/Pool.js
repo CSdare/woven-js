@@ -38,27 +38,32 @@ function WorkerThread(pool, workerFile) {
     if (this.workerTask.funcName !== null) {
       const worker = new workerFile();
       worker.addEventListener('message', dummyCallback, false);
-      worker.addEventListener('error', (msg, line, fileName) => {
-        console.error(msg + `\nerror in worker at line ${line} in ${fileName}`);
-      });
+      worker.addEventListener('error', dummyErrorCallback, false);
       worker.postMessage({ funcName: workerTask.funcName, payload: workerTask.payload });
     }
   }
-  
+
   function dummyCallback(event) {
     _this.workerTask.callback(event.data);
-    _this.pool.freeWorkerThread(_this);  // changed from this to _this
-    this.terminate(); // terminates current worker thread - this refers to worker, _this refers to workerThread
+    _this.pool.freeWorkerThread(_this); // changed from this to _this
+    // terminates current worker thread - this refers to worker, _this refers to workerThread
+    this.terminate();
   }
-  
-  // dummyCallback.bind(this);
+
+  function dummyErrorCallback(event) {
+    _this.workerTask.errorCallback(`${event.message}\nerror in worker at line ${event.lineno} in ${event.filename}`);
+    _this.pool.freeWorkerThread(_this);
+    this.terminate();
+  }
+
   this.run.bind(this);
 }
 
-function WorkerTask(funcName, payload, callback) {
+function WorkerTask(funcName, payload, callback, errorCallback) {
   this.funcName = funcName;
   this.payload = payload;
   this.callback = callback;
+  this.errorCallback = errorCallback;
 }
 
 module.exports = { Pool, WorkerTask };
