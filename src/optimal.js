@@ -1,7 +1,7 @@
 module.exports = {
   clientDefaults: true,
-  location: null,  // set this way for testing only
+  location: null,
   pool: null,
   serverDefaults: true,
   threads: null,
-}
+};

@@ -1,20 +1,18 @@
 module.exports = function optimizeWrapper(options) {
-
   return function optimize(req, res, next) {
-  
+    // woven.connect function makes GET request to this route:
     if (req.url === '/__woven_first__') {
-      //handling for developer overrides
       if (options.alwaysClient === true) {
         res.json({
           alwaysClient: true,
           alwaysServer: false,
-          ping: null
+          ping: null,
         });
-      } else if(options.alwaysServer === true) {
+      } else if (options.alwaysServer === true) {
         res.json({
           alwaysClient: false,
           alwaysServer: true,
-          ping: null
+          ping: null,
         });
       } else {
         res.json({
@@ -27,11 +25,10 @@ module.exports = function optimizeWrapper(options) {
         });
       }
 
-    //recieving route for run() function calls where server is the optimal location
+    // woven.run makes POST request to this route:
     } else if (req.url === '/__woven__') {
       const output = options.functions[req.body.funcName](...req.body.payload);
       res.json(output);
-    }
-    else next();
-  }
-}
+    } else next();
+  };
+};

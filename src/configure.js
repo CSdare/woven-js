@@ -62,7 +62,7 @@ module.exports = function configureWrapper(options) {
           if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
           break;
         case 'pingSize':
-          if (typeof userOptions[field] !== 'number' && !pingOptions.hasOwnProperty(userOptions[field])) throw new Error(`${field} - incorrect data type.`);
+          if (typeof userOptions[field] !== 'number' && !(userOptions[field] in pingOptions)) throw new Error(`${field} - incorrect data type.`);
           if (userOptions[field] > 10000000) throw new Error('pingSize is too large; should be 10M bytes or less');
           break;
         case 'stringPing':
@@ -72,41 +72,43 @@ module.exports = function configureWrapper(options) {
       }
       options[field] = userOptions[field];
     });
-    // for (let field in userOptions) {
-    //   switch (field) {
-    //     case 'alwaysClient':
-    //       if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
-    //       options.alwaysServer = false;
-    //       break;
-    //     case 'alwaysServer':
-    //       if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
-    //       options.alwaysClient = false;
-    //       break;
-    //     case 'dynamicMax':
-    //       if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
-    //       break;
-    //     case 'fallback':
-    //       if (userOptions[field] !== 'server' && userOptions[field] !== 'client') throw new Error(`${field} - incorrect data type.`);
-    //       break;
-    //     case 'functions':
-    //       throw new Error(`Set functions in first argument of configure function.`);
-    //       break;
-    //     case 'maxThreads':
-    //       if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
-    //       break;
-    //     case 'pingSize':
-    //       if (typeof userOptions[field] !== 'number' && !pingOptions.hasOwnProperty(userOptions[field])) throw new Error(`${field} - incorrect data type.`);
-    //       if (userOptions[field] > 10000000) throw new Error('pingSize is too large; should be 10M bytes or less');
-    //       break;
-    //     case 'stringPing':
-    //       throw new Error(`${field} is not a configurable option`);
-    //       break;
-    //     default:
-    //       throw new Error(`${field} is not a configurable option`);
-    //   }
-    //   options[field] = userOptions[field];
-    // }
     pingCheck(options);
   };
 };
 
+/* original for in loop, replaced with Object.keys forEach loop
+for (let field in userOptions) {
+  switch (field) {
+    case 'alwaysClient':
+      if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
+      options.alwaysServer = false;
+      break;
+    case 'alwaysServer':
+      if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
+      options.alwaysClient = false;
+      break;
+    case 'dynamicMax':
+      if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
+      break;
+    case 'fallback':
+      if (userOptions[field] !== 'server' && userOptions[field] !== 'client') throw new Error(`${field} - incorrect data type.`);
+      break;
+    case 'functions':
+      throw new Error(`Set functions in first argument of configure function.`);
+      break;
+    case 'maxThreads':
+      if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
+      break;
+    case 'pingSize':
+      if (typeof userOptions[field] !== 'number' && !pingOptions.hasOwnProperty(userOptions[field])) throw new Error(`${field} - incorrect data type.`);
+      if (userOptions[field] > 10000000) throw new Error('pingSize is too large; should be 10M bytes or less');
+      break;
+    case 'stringPing':
+      throw new Error(`${field} is not a configurable option`);
+      break;
+    default:
+      throw new Error(`${field} is not a configurable option`);
+  }
+  options[field] = userOptions[field];
+}
+*/

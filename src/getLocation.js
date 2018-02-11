@@ -1,5 +1,5 @@
-module.exports = function(optimal) {
-  return function() {
+module.exports = function getLocationWrapper(optimal) {
+  return function getLocation() {
     return optimal.location;
-  }
-}
+  };
+};

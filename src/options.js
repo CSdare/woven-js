@@ -7,4 +7,4 @@ module.exports = {
   maxThreads: 12,
   pingSize: 100,
   stringPing: null,
-}
+};
