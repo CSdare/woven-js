@@ -1,6 +1,6 @@
 /**
  *
- * @param {Object} optimal - optimal computing location (optimal.location) and thread number 
+ * @param {Object} optimal - optimal computing location (optimal.location) and thread number
  *                     (optimal.threads) based on client optimization function
  */
 
