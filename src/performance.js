@@ -1,19 +1,21 @@
 function combinedOptimization(clientData, optimal) {
-  if (clientData.alwaysClient === false) networkCheck();
-  if (optimal.location === 'client') {
-    browserCheck();
-    threadCheck();
+  // function to check network speed
+  function networkCheck() {
+    if (clientData.dynamicSpeed > clientData.dynamicMax) {
+      clientData.networkSpeed = false;
+      optimal.location = 'client';
+    } else if (!clientData.dynamicSpeed) {
+      clientData.missingDeviceInfo = true;
+    } else optimal.location = 'server';
   }
-  // troubleshoot();
-  console.info(`optimized location is: ${optimal.location} with ${optimal.threads} threads.`);
-  
+
+  // function to check user's browser
   function browserCheck() {
-    let browserOptions = ['Chrome', 'Firefox', 'Safari', 'Opera', 'IE'];
+    const browserOptions = ['Chrome', 'Firefox', 'Safari', 'Opera', 'IE'];
     let firstIndex = Infinity;
-  
-    for (let i = 0; i < browserOptions.length; i++) {
+    for (let i = 0; i < browserOptions.length; i += 1) {
       if (clientData.userAgent.includes(browserOptions[i])) {
-        let index = clientData.userAgent.indexOf(browserOptions[i]);
+        const index = clientData.userAgent.indexOf(browserOptions[i]);
         if (index >= 0 && index < firstIndex) {
           firstIndex = index;
           clientData.browser = browserOptions[i];
@@ -22,19 +24,7 @@ function combinedOptimization(clientData, optimal) {
     }
   }
 
-  function networkCheck() {
-    if (clientData.dynamicSpeed > clientData.dynamicMax) {
-      clientData.networkSpeed = false;
-      optimal.location = 'client';
-    } else if (!clientData.dynamicSpeed) {
-      clientData.missingDeviceInfo = true;
-    } else {
-      optimal.location = 'server';
-    }
-  }
-
   function threadCheck() {
-
     if (clientData.threads) {
       if (clientData.threads > clientData.maxThreads) clientData.threads = clientData.maxThreads;
       if (clientData.browser === 'Chrome') {
@@ -47,9 +37,15 @@ function combinedOptimization(clientData, optimal) {
         if (clientData.threads > 10) optimal.threads = 10;
         else optimal.threads = clientData.threads;
       } else clientData.threads < 4 ? optimal.threads = clientData.threads : optimal.threads = 4;
-    }
-    else optimal.threads = 4;
+    } else optimal.threads = 4;
   }
+
+  if (clientData.alwaysClient === false) networkCheck();
+  if (optimal.location === 'client') {
+    browserCheck();
+    threadCheck();
+  }
+  // troubleshoot();
 
   // function troubleshoot() {
   //   const ideals = {

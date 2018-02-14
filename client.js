@@ -1,7 +1,6 @@
-const options = require('./src/options');
 const optimal = require('./src/optimal');
-const Pool = require('./src/Pool').Pool; // does this need to reference options object? only time will tell
-const WorkerTask = require('./src/Pool').WorkerTask;
+const { Pool } = require('./src/Pool'); // does this need to reference options object? only time will tell
+const { WorkerTask } = require('./src/Pool');
 const performance = require('./src/performance');
 const getLocation = require('./src/getLocation')(optimal);
 const connect = require('./src/connect')(optimal, Pool, performance);
@@ -14,9 +13,8 @@ module.exports = function Woven() {
     instance = {
       connect,
       run,
-      WorkerTask,
       getLocation,
-    }
+    };
   }
   return instance;
-}
+};
