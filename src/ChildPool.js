@@ -1,8 +1,64 @@
 const { fork } = require('child_process');
 
-class Pool {
-  constructor(size) {
-    this.size = size;
-    
+class ChildThread {
+  constructor(pool, childProcessFile) {
+    this.pool = pool;
+    this.childProcessFile = childProcessFile;
+  }
+
+  run(childTask) {
+    const childProcess = fork(this.childProcessFile);
+    childProcess.on('exit', (exit, signal) => {
+      console.log(`child process exited with code ${exit} and optional signal ${signal}`);
+    });
+    childProcess.on('message', (msg) => {
+      childTask.callback(msg.data);
+      this.pool.freeChildThread(this);
+    });
+    childProcess.on('error', (err) => {
+      childTask.errorCallback(err);
+      this.pool.freeChildThread(this);
+    });
+    childProcess.send({ funcName: childTask.funcName, payload: childTask.payload });
   }
 }
+
+class ChildPool {
+  constructor(size, childProcessFile) {
+    this.size = size;
+    this.childProcessFile = childProcessFile;
+    this.taskQueue = [];
+    this.childQueue = [];
+  }
+
+  init() {
+    for (let i = 0; i < this.size; i += 1) {
+      this.childQueue.push(new ChildThread(this, this.childProcessFile));
+    }
+  }
+
+  addChildTask(childTask) {
+    if (this.childQueue.length > 0) {
+      const childThread = this.childQueue.shift();
+      childThread.run(childTask);
+    } else this.taskQueue.push(childTask);
+  }
+
+  freeChildThread(childThread) {
+    if (this.taskQueue.length > 0) {
+      const childTask = this.taskQueue.shift();
+      childThread.run(childTask);
+    } else this.childQueue.push(childThread);
+  }
+}
+
+class ChildTask {
+  constructor(funcName, payload, callback, errorCallback) {
+    this.funcName = funcName;
+    this.payload = payload;
+    this.callback = callback;
+    this.errorCallback = errorCallback;
+  }
+}
+
+module.exports = { ChildPool, ChildTask };
