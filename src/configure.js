@@ -1,3 +1,8 @@
+const fs = require('fs');
+const os = require('os');
+
+const { ChildPool } = require('./ChildPool');
+
 // options for dynamicPing size/bytes:
 const pingOptions = {
   tiny: 100,
@@ -34,12 +39,37 @@ function pingCheck(options) {
 }
 
 module.exports = function configureWrapper(options) {
-  return function configure(functions, userOptions) {
-    if (arguments.length === 0) throw new Error('configure requires a functions argument');
-    if (typeof functions !== 'object') {
-      throw new Error(`${functions} must be an export object.`);
+  return function configure(functionsPath, userOptions) {
+    // checks to make sure functionsPath argument is correct
+    if (arguments.length === 0) throw new Error('configure requires a functions filepath argument');
+    if (typeof functionsPath !== 'string') {
+      throw new Error(`${functionsPath} must be an absolute filepath string.`);
     }
-    options.functions = functions;
+
+    // create path for woven child process file
+    const childProcessFilePath = `${functionsPath.slice(0, -3)}_woven_child_process.js`;
+
+    // string to append to woven_child_process file
+    const childProcessFileString = `const functions = require(${functionsPath});
+    process.on('message', (msg) => {
+      const data = functions[msg.funcName](...msg.payload);
+      process.send({ data });
+    });`;
+
+    // write file using functionsPath argument
+    fs.writeFile(childProcessFilePath, childProcessFileString, (error) => {
+      if (error) console.error('error writing child process file');
+      else console.log('done writing child process file');
+    });
+
+    // calculate hardware threads
+    const threadCount = os.cpus().length;
+
+    // initialize new ChildPool stored on options object
+    options.pool = new ChildPool(threadCount, childProcessFilePath);
+    options.pool.init();
+
+    // configure using passed in options object, testing for correct data types
     Object.keys(userOptions).forEach((field) => {
       switch (field) {
         case 'alwaysClient':
@@ -56,8 +86,8 @@ module.exports = function configureWrapper(options) {
         case 'fallback':
           if (userOptions[field] !== 'server' && userOptions[field] !== 'client') throw new Error(`${field} - incorrect data type.`);
           break;
-        case 'functions':
-          throw new Error('Set functions in first argument of configure function.');
+        case 'functionsPath':
+          throw new Error('Set functions filepath in first argument of configure function.');
         case 'maxThreads':
           if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
           break;
@@ -76,7 +106,7 @@ module.exports = function configureWrapper(options) {
   };
 };
 
-/* original for in loop, replaced with Object.keys forEach loop
+/* original for in loop, replaced with Object.keys forEach loop - TO DELETE
 for (let field in userOptions) {
   switch (field) {
     case 'alwaysClient':
