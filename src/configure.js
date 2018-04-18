@@ -50,7 +50,7 @@ module.exports = function configureWrapper(options) {
     const childProcessFilePath = `${functionsPath.slice(0, -3)}_woven_child_process.js`;
 
     // string to append to woven_child_process file
-    const childProcessFileString = `const functions = require(${functionsPath});
+    const childProcessFileString = `const functions = require('${functionsPath}');
     process.on('message', (msg) => {
       const data = functions[msg.funcName](...msg.payload);
       process.send({ data });
