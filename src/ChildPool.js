@@ -8,16 +8,15 @@ class ChildThread {
 
   run(childTask) {
     const childProcess = fork(this.childProcessFile);
-    childProcess.on('exit', (exit, signal) => {
-      console.log(`child process exited with code ${exit} and optional signal ${signal}`);
-    });
     childProcess.on('message', (msg) => {
       childTask.callback(msg.data);
       this.pool.freeChildThread(this);
+      childProcess.kill();
     });
     childProcess.on('error', (err) => {
       childTask.errorCallback(err);
       this.pool.freeChildThread(this);
+      childProcess.kill();
     });
     childProcess.send({ funcName: childTask.funcName, payload: childTask.payload });
   }
