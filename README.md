@@ -88,14 +88,18 @@ woven.configure(functionsPath, { /* client options */ });
 The options object accessible through the configure method also allows for developer customizations:
  
 ```javascript
-module.exports = {
+{
   alwaysClient: false,
   alwaysServer: false,
-  dynamicMax: 10000,
+  dynamicMax: 500,
+  execSyncFilePath: '',
   fallback: 'server',
-  maxThreads: 12,
+  maxChildThreads: os.cpus().length,
+  maxWorkerThreads: 12,
   pingSize: 'small',
-}
+  useChildProcess: true,
+  useWebWorkers: true,
+};
 ```
 
 #### Developer Customization Options:
@@ -106,9 +110,13 @@ module.exports = {
 
   - **fallback:** In the event that the optimization process fails, WovenJS will route to the fallback assigned here. Unless modified by the developer the default fallback is to process on the server.
 
-  - **maxThreads:** A developer override to set the maximum # of threads that can be created for a given client (thread number corrosponds with the number of generated Web Workers).
+  - **maxWorkerThreads:** A developer override to set the maximum # of Web Worker threads that can be created for a every client.
+
+  - **maxChildThreads:** A developer override to set the maximum # of child process threads that can be run concurrently on the serer (defaults to number of CPU's).
 
   - **pingSize:** Use this property to set an exact size for the dynamic ping data in bytes or choose between WovenJS's preset options: `'tiny'`(100bytes), `'small'`(4kB), `'medium'`(50kB), `'large'`(400kB), or `'huge'`(1MB).
+
+  - **useChildProcess/useWebWorkers:** Use these properties to turn on or off using child processes on the server or Web Workers on the client. Default for both is true.
 
   Make sure that your server/application can handle the larger data transfer (400KB-1MB) before using the large/huge ping size presets.
   
