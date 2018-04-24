@@ -1,5 +1,4 @@
 const fs = require('fs');
-const os = require('os');
 
 const { ChildPool } = require('./ChildPool');
 
@@ -51,23 +50,18 @@ module.exports = function configureWrapper(options) {
 
     // string to append to woven_child_process file
     const childProcessFileString = `const functions = require('${functionsPath}');
-    process.on('message', (msg) => {
-      const data = functions[msg.funcName](...msg.payload);
-      process.send({ data });
-    });`;
+process.on('message', (msg) => {
+  const data = functions[msg.funcName](...msg.payload);
+  process.send({ data });
+});`;
+
+    // const execFileSyncFilesString = `const functions = require('{}`
 
     // write file using functionsPath argument
     fs.writeFile(childProcessFilePath, childProcessFileString, (error) => {
       if (error) console.error('error writing child process file');
       else console.log('done writing child process file');
     });
-
-    // calculate hardware threads
-    const threadCount = os.cpus().length;
-
-    // initialize new ChildPool stored on options object
-    options.pool = new ChildPool(threadCount, childProcessFilePath);
-    options.pool.init();
 
     // configure using passed in options object, testing for correct data types
     Object.keys(userOptions).forEach((field) => {
@@ -109,6 +103,12 @@ module.exports = function configureWrapper(options) {
       }
       options[field] = userOptions[field];
     });
+
+    // initialize new ChildPool stored on options object
+    options.pool = new ChildPool(options.maxChildThreads, childProcessFilePath);
+    options.pool.init();
+
+    // create ping if necessary
     pingCheck(options);
   };
 };
