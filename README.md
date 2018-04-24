@@ -92,7 +92,6 @@ The options object accessible through the configure method also allows for devel
   alwaysClient: false,
   alwaysServer: false,
   dynamicMax: 500,
-  execSyncFilePath: '',
   fallback: 'server',
   maxChildThreads: os.cpus().length,
   maxWorkerThreads: 12,
