@@ -88,15 +88,22 @@ module.exports = function configureWrapper(options) {
           break;
         case 'functionsPath':
           throw new Error('Set functions filepath in first argument of configure function.');
-        case 'maxThreads':
+        case 'maxChildThreads':
+          if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
+          break;
+        case 'maxWorkerThreads':
           if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
           break;
         case 'pingSize':
           if (typeof userOptions[field] !== 'number' && !(userOptions[field] in pingOptions)) throw new Error(`${field} - incorrect data type.`);
           if (userOptions[field] > 10000000) throw new Error('pingSize is too large; should be 10M bytes or less');
           break;
-        case 'stringPing':
-          throw new Error(`${field} is not a configurable option`);
+        case 'useChildProcess':
+          if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
+          break;
+        case 'useWebWorkers':
+          if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
+          break;
         default:
           throw new Error(`${field} is not a configurable option`);
       }
