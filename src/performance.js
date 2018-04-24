@@ -26,7 +26,9 @@ function combinedOptimization(clientData, optimal) {
 
   function threadCheck() {
     if (clientData.threads) {
-      if (clientData.threads > clientData.maxThreads) clientData.threads = clientData.maxThreads;
+      if (clientData.threads > clientData.maxWorkerThreads) {
+        clientData.threads = clientData.maxWorkerThreads;
+      }
       if (clientData.browser === 'Chrome') {
         if (clientData.threads > 25) optimal.threads = 25;
         else optimal.threads = clientData.threads;
@@ -61,10 +63,10 @@ function combinedOptimization(clientData, optimal) {
   //   if (clientData.missingDeviceInfo === true) {
   //     console.log("Warning: missing client device data");
   //     optimal.location = clientData.fallback;
-  //   } else if (clientData.maxThreads > ideal[clientData.browser]) {
+  //   } else if (clientData.maxWorkerThreads > ideal[clientData.browser]) {
   //     optimal.threads = ideal[clientData.browser];
   //   } else {
-  //     optimal.threads = clientData.maxThreads;
+  //     optimal.threads = clientData.maxWorkerThreads;
   //   }
   //   console.log('will be processed here: ', optimal.location);
   // }
