@@ -45,8 +45,9 @@ module.exports = function configureWrapper(options) {
       throw new Error(`${functionsPath} must be an absolute filepath string.`);
     }
 
-    // create path for woven child process file
+    // create path for woven child process file and exec sync file
     const childProcessFilePath = `${functionsPath.slice(0, -3)}_woven_child_process.js`;
+    const execSyncFilePath = `${functionsPath.slice(0, -3)}_woven_exec_file_sync.js`;
 
     // string to append to woven_child_process file
     const childProcessFileString = `const functions = require('${functionsPath}');
@@ -55,12 +56,23 @@ process.on('message', (msg) => {
   process.send({ data });
 });`;
 
-    // const execFileSyncFilesString = `const functions = require('{}`
-
+    const execSyncFileString = `const functions = require('${functionsPath}');
+const funcName = process.argv[2];
+const payload = JSON.parse(process.argv[3]);
+const data = functions[funcName](...payload);
+console.log(JSON.stringify({ data }));
+`;
     // write file using functionsPath argument
     fs.writeFile(childProcessFilePath, childProcessFileString, (error) => {
       if (error) console.error('error writing child process file');
       else console.log('done writing child process file');
+    });
+
+    // set execSyncFilePath for reference later and write the file
+    options.execSyncFilePath = execSyncFilePath;
+    fs.writeFile(execSyncFilePath, execSyncFileString, (error) => {
+      if (error) console.error('error writing exec file sync file');
+      else console.log('done writing exec file sync file');
     });
 
     // configure using passed in options object, testing for correct data types
