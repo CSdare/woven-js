@@ -1,3 +1,4 @@
+const { execSync } = require('child_process');
 const { ChildTask } = require('./ChildPool');
 
 module.exports = function optimizeWrapper(options) {
@@ -22,28 +23,36 @@ module.exports = function optimizeWrapper(options) {
           alwaysServer: false,
           dynamicMax: options.dynamicMax,
           ping: options.stringPing,
-          maxThreads: options.maxThreads,
+          maxWorkerThreads: options.maxWorkerThreads,
           fallback: options.fallback,
+          useWebWorkers: options.useWebWorkers,
         });
       }
 
     // woven.run makes POST request to this route:
     } else if (req.url === '/__woven__') {
+      const { funcName, payload } = req.body;
+      let output;
+      if (options.useChildProcess) {
       // await resolution of promise -- will resolve once child process pool finishes task
-      const output = await new Promise((resolve, reject) => {
-        const callback = data => resolve(data);
-        const errorCallback = err => reject(err);
-        // create new ChildTask to add to pool
-        const childTask = new ChildTask(
-          req.body.funcName,
-          req.body.payload,
-          callback,
-          errorCallback,
-        );
-        // add created childTask to child process pool
-        options.pool.addChildTask(childTask);
-      });
-
+        output = await new Promise((resolve, reject) => {
+          const callback = data => resolve(data);
+          const errorCallback = err => reject(err);
+          // create new ChildTask to add to pool
+          const childTask = new ChildTask(
+            funcName,
+            payload,
+            callback,
+            errorCallback,
+          );
+          // add created childTask to child process pool
+          options.pool.addChildTask(childTask);
+        });
+      } else {
+        // synchronous processing using execSync method of child_process
+        const outputBuffer = execSync(`node ${options.execSyncFilePath} ${funcName} ${JSON.stringify(payload)}`);
+        output = JSON.parse(outputBuffer.toString()).data;
+      }
       res.json(output);
     } else next();
   };
