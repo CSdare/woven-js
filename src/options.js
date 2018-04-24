@@ -4,6 +4,7 @@ module.exports = {
   alwaysClient: false,
   alwaysServer: false,
   dynamicMax: 500,
+  execSyncFilePath: '',
   fallback: 'server',
   functions: null,
   maxChildThreads: os.cpus().length,
