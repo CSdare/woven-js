@@ -47,7 +47,7 @@ module.exports = function configureWrapper(options) {
 
     // create path for woven child process file and exec sync file
     const childProcessFilePath = `${functionsPath.slice(0, -3)}_woven_child_process.js`;
-    const execSyncFilePath = `${functionsPath.slice(0, -3)}_woven_exec_file_sync.js`;
+    const execSyncFilePath = `${functionsPath.slice(0, -3)}_woven_exec_sync.js`;
 
     // string to append to woven_child_process file
     const childProcessFileString = `const functions = require('${functionsPath}');
