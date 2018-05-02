@@ -18,7 +18,7 @@ module.exports = function connectWrapper(optimal, Pool, performance) {
           alwaysClient: data.alwaysClient,
         };
         optimal.serverDefaults = false;
-        if (data.alwaysServer === true) {
+        if (data.alwaysServer === true || !window.Worker) {
           optimal.location = 'server';
           optimal.clientDefaults = false;
           return;

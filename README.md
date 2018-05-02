@@ -32,9 +32,9 @@ Next, in your express server file, insert the following:
 
 const app = require('express')();
 const woven = require('woven-js');
-const functions = require(/* 'path to your functions file' */);
+const functionsPath = /* 'path to your functions file' */;
 
-woven.configure(functions, { /* client options */ });
+woven.configure(functionsPath, { /* client options */ });
 app.use(woven.optimize);
 
 ```
@@ -83,7 +83,7 @@ module.exports = { funcOne, funcTwo };
 The `woven.configure()` method links the back end with the project's pure functions.
 
 ```javascript
-woven.configure(functions, { /* client options */ });
+woven.configure(functionsPath, { /* client options */ });
 ```
 The options object accessible through the configure method also allows for developer customizations:
  
