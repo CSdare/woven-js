@@ -13,12 +13,15 @@ module.exports = function connectWrapper(optimal, Pool, performance) {
           browser: null,
           missingDeviceInfo: false,
           dynamicMax: data.dynamicMax,
-          maxThreads: data.maxThreads,
+          maxWorkerThreads: data.maxWorkerThreads,
           fallback: data.fallback,
           alwaysClient: data.alwaysClient,
         };
         optimal.serverDefaults = false;
-        if (data.alwaysServer === true || !window.Worker) {
+        // If useWebWorkers flag is false temporary workaround is to run functions on
+        // the server. Ultimately should find another way to run functions on the client's
+        // single thread instead of using web workers.
+        if (data.alwaysServer === true || data.useWebWorkers === false || !window.Worker) {
           optimal.location = 'server';
           optimal.clientDefaults = false;
           return;

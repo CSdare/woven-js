@@ -1,5 +1,4 @@
 const fs = require('fs');
-const os = require('os');
 
 const { ChildPool } = require('./ChildPool');
 
@@ -46,28 +45,35 @@ module.exports = function configureWrapper(options) {
       throw new Error(`${functionsPath} must be an absolute filepath string.`);
     }
 
-    // create path for woven child process file
+    // create path for woven child process file and exec sync file
     const childProcessFilePath = `${functionsPath.slice(0, -3)}_woven_child_process.js`;
+    const execSyncFilePath = `${functionsPath.slice(0, -3)}_woven_exec_sync.js`;
 
     // string to append to woven_child_process file
     const childProcessFileString = `const functions = require('${functionsPath}');
-    process.on('message', (msg) => {
-      const data = functions[msg.funcName](...msg.payload);
-      process.send({ data });
-    });`;
+process.on('message', (msg) => {
+  const data = functions[msg.funcName](...msg.payload);
+  process.send({ data });
+});`;
 
+    const execSyncFileString = `const functions = require('${functionsPath}');
+const funcName = process.argv[2];
+const payload = JSON.parse(process.argv[3]);
+const data = functions[funcName](...payload);
+console.log(JSON.stringify({ data }));
+`;
     // write file using functionsPath argument
     fs.writeFile(childProcessFilePath, childProcessFileString, (error) => {
       if (error) console.error('error writing child process file');
       else console.log('done writing child process file');
     });
 
-    // calculate hardware threads
-    const threadCount = os.cpus().length;
-
-    // initialize new ChildPool stored on options object
-    options.pool = new ChildPool(threadCount, childProcessFilePath);
-    options.pool.init();
+    // set execSyncFilePath for reference later and write the file
+    options.execSyncFilePath = execSyncFilePath;
+    fs.writeFile(execSyncFilePath, execSyncFileString, (error) => {
+      if (error) console.error('error writing exec file sync file');
+      else console.log('done writing exec file sync file');
+    });
 
     // configure using passed in options object, testing for correct data types
     Object.keys(userOptions).forEach((field) => {
@@ -88,20 +94,33 @@ module.exports = function configureWrapper(options) {
           break;
         case 'functionsPath':
           throw new Error('Set functions filepath in first argument of configure function.');
-        case 'maxThreads':
+        case 'maxChildThreads':
+          if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
+          break;
+        case 'maxWorkerThreads':
           if (typeof userOptions[field] !== 'number') throw new Error(`${field} - incorrect data type.`);
           break;
         case 'pingSize':
           if (typeof userOptions[field] !== 'number' && !(userOptions[field] in pingOptions)) throw new Error(`${field} - incorrect data type.`);
           if (userOptions[field] > 10000000) throw new Error('pingSize is too large; should be 10M bytes or less');
           break;
-        case 'stringPing':
-          throw new Error(`${field} is not a configurable option`);
+        case 'useChildProcess':
+          if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
+          break;
+        case 'useWebWorkers':
+          if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
+          break;
         default:
           throw new Error(`${field} is not a configurable option`);
       }
       options[field] = userOptions[field];
     });
+
+    // initialize new ChildPool stored on options object
+    options.pool = new ChildPool(options.maxChildThreads, childProcessFilePath);
+    options.pool.init();
+
+    // create ping if necessary
     pingCheck(options);
   };
 };
