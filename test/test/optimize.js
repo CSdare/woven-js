@@ -1,9 +1,9 @@
 const express = require('express');
 const request = require('supertest');
 const bodyParser = require('body-parser');
-const woven = require('../index');
+const woven = require('../../index');
 const { expect } = require('chai');
-const functions = require('./functions');
+const functions = require('../util/functions');
 
 const app = express();
 

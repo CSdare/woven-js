@@ -1,7 +1,7 @@
 const chai = require('chai');
-const woven = require('../index');
-const functions = require('../test/functions');
-const options = require('../src/options');
+const woven = require('../../index');
+const functions = require('../util/functions');
+const options = require('../../src/options');
 
 const should = chai.should();
 
