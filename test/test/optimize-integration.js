@@ -3,15 +3,18 @@ const request = require('supertest');
 const bodyParser = require('body-parser');
 const woven = require('../../index');
 const { expect } = require('chai');
-const functions = require('../util/functions');
+const path = require('path');
+
+const functionsPath = path.resolve(__dirname, '../util/functions.js');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(woven.optimize);
 
-describe('Optimize function tests', () => {
+describe('Optimize integration tests', () => {
   describe('initial GET from connect function', () => {
+    before(() => woven.configure(functionsPath));
     it('should respond with JSON', (done) => {
       request(app)
         .get('/__woven_first__')
@@ -31,8 +34,9 @@ describe('Optimize function tests', () => {
           expect(res.body.alwaysClient).to.equal(false);
           expect(res.body.dynamicMax).to.equal(500);
           expect(res.body.ping.length).to.equal(50);
-          expect(res.body.maxThreads).to.equal(12);
+          expect(res.body.maxWorkerThreads).to.equal(12);
           expect(res.body.fallback).to.equal('server');
+          expect(res.body.useWebWorkers).to.equal(true);
           done();
         });
     });
@@ -40,7 +44,7 @@ describe('Optimize function tests', () => {
 
   describe('initial GET with developer settings', () => {
     describe('options.alwaysClient = true', () => {
-      before(() => woven.configure(functions, { alwaysClient: true }));
+      before(() => woven.configure(functionsPath, { alwaysClient: true }));
       it('correct alwaysClient options', (done) => {
         request(app)
           .get('/__woven_first__')
@@ -54,7 +58,7 @@ describe('Optimize function tests', () => {
     });
 
     describe('options.alwaysServer = true', () => {
-      before(() => woven.configure(functions, { alwaysServer: true }));
+      before(() => woven.configure(functionsPath, { alwaysServer: true }));
       it('correct alwaysServer options', (done) => {
         request(app)
           .get('/__woven_first__')
