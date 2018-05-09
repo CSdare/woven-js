@@ -65,14 +65,12 @@ console.log(JSON.stringify({ data }));
     // write file using functionsPath argument
     fs.writeFile(childProcessFilePath, childProcessFileString, (error) => {
       if (error) console.error('error writing child process file');
-      else console.log('done writing child process file');
     });
 
     // set execSyncFilePath for reference later and write the file
     options.execSyncFilePath = execSyncFilePath;
     fs.writeFile(execSyncFilePath, execSyncFileString, (error) => {
       if (error) console.error('error writing exec file sync file');
-      else console.log('done writing exec file sync file');
     });
 
     // configure using passed in options object, testing for correct data types
