@@ -41,6 +41,10 @@ describe('Optimize unit tests', () => {
       const result = await woven.optimize(testReqAddTen, testRes, testNext);
       expect(result).to.equal(JSON.stringify(40));
     });
+    it('Calls next when route does not match a woven route', async () => {
+      const result = await woven.optimize(testReqWrongUrl, testRes, testNext);
+      expect(result).to.equal('called next()');
+    });
     // it();
   });
 });
