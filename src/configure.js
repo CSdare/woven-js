@@ -38,7 +38,7 @@ function pingCheck(options) {
 }
 
 module.exports = function configureWrapper(options) {
-  return function configure(functionsPath, userOptions) {
+  return function configure(functionsPath, userOptions = {}) {
     // checks to make sure functionsPath argument is correct
     if (arguments.length === 0) throw new Error('configure requires a functions filepath argument');
     if (typeof functionsPath !== 'string') {
