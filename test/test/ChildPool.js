@@ -5,26 +5,27 @@ const woven = require('../../index');
 
 const functionsPath = path.resolve(__dirname, '../util/functions.js');
 const childProcessFilePath = path.resolve(__dirname, '../util/functions_woven_child_process.js');
-// size of the pool - max concurrent threads
-const size = 4;
+const size = 4; // size of the pool - max concurrent threads
 
 describe('ChildPool', () => {
   woven.configure(functionsPath, { useChildProcess: true, writeFileSync: true });
   let pool = new ChildPool(size, path.resolve(childProcessFilePath));
 
-  it(`Initializing the pool should add ${size} threads to the childQueue`, () => {
-    pool.init();
-    expect(pool.size).to.equal(size);
-    expect(pool.childQueue.length).to.equal(4);
-    expect(pool.taskQueue.length).to.equal(0);
-  });
+  describe('Initializiation of ChildPool', () => {
+    it(`Initializing the pool should add ${size} threads to the childQueue`, () => {
+      pool.init();
+      expect(pool.size).to.equal(size);
+      expect(pool.childQueue.length).to.equal(4);
+      expect(pool.taskQueue.length).to.equal(0);
+    });
 
-  it('Initializing the pool should set the correct child process file path', () => {
-    expect(pool.childProcessFile).to.equal(childProcessFilePath);
-  });
+    it('Initializing the pool should set the correct child process file path', () => {
+      expect(pool.childProcessFile).to.equal(childProcessFilePath);
+    });
 
-  it('Pool should only be able to initialize once', () => {
-    expect(pool.init.bind(pool)).to.throw('Cannot re-initialize');
+    it('Pool should only be able to initialize once', () => {
+      expect(pool.init.bind(pool)).to.throw('Cannot re-initialize');
+    });
   });
 
   describe('Adding tasks to pool', () => {
@@ -65,6 +66,18 @@ describe('ChildPool', () => {
         expect(callbackCalledFlag).to.equal(true);
         done();
       }, 400);
+    });
+
+    it('threads should be freed when task is done', (done) => {
+      const pool3 = new ChildPool(size, path.resolve(childProcessFilePath));
+      pool3.init();
+      pool3.addChildTask(task2);
+      pool3.addChildTask(task2);
+      expect(pool3.childQueue.length).to.equal(pool3.size - 2);
+      setTimeout(() => {
+        expect(pool3.childQueue.length).to.equal(pool3.size);
+        done();
+      }, 500);
     });
   });
 });
