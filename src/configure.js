@@ -45,34 +45,6 @@ module.exports = function configureWrapper(options) {
       throw new Error(`${functionsPath} must be an absolute filepath string.`);
     }
 
-    // create path for woven child process file and exec sync file
-    const childProcessFilePath = `${functionsPath.slice(0, -3)}_woven_child_process.js`;
-    const execSyncFilePath = `${functionsPath.slice(0, -3)}_woven_exec_sync.js`;
-
-    // string to append to woven_child_process file
-    const childProcessFileString = `const functions = require('${functionsPath}');
-process.on('message', (msg) => {
-  const data = functions[msg.funcName](...msg.payload);
-  process.send({ data });
-});`;
-
-    const execSyncFileString = `const functions = require('${functionsPath}');
-const funcName = process.argv[2];
-const payload = JSON.parse(process.argv[3]);
-const data = functions[funcName](...payload);
-console.log(JSON.stringify({ data }));
-`;
-    // write file using functionsPath argument
-    fs.writeFile(childProcessFilePath, childProcessFileString, (error) => {
-      if (error) console.error('error writing child process file');
-    });
-
-    // set execSyncFilePath for reference later and write the file
-    options.execSyncFilePath = execSyncFilePath;
-    fs.writeFile(execSyncFilePath, execSyncFileString, (error) => {
-      if (error) console.error('error writing exec file sync file');
-    });
-
     // configure using passed in options object, testing for correct data types
     Object.keys(userOptions).forEach((field) => {
       switch (field) {
@@ -108,11 +80,51 @@ console.log(JSON.stringify({ data }));
         case 'useWebWorkers':
           if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
           break;
+        case 'writeFileSync':
+          if (typeof userOptions[field] !== 'boolean') throw new Error(`${field} - incorrect data type.`);
+          break;
         default:
           throw new Error(`${field} is not a configurable option`);
       }
       options[field] = userOptions[field];
     });
+
+    // create path for woven child process file and exec sync file
+    const childProcessFilePath = `${functionsPath.slice(0, -3)}_woven_child_process.js`;
+    const execSyncFilePath = `${functionsPath.slice(0, -3)}_woven_exec_sync.js`;
+
+    // string to append to woven_child_process file
+    const childProcessFileString = `const functions = require('${functionsPath}');
+process.on('message', (msg) => {
+  const data = functions[msg.funcName](...msg.payload);
+  process.send({ data });
+});`;
+
+    const execSyncFileString = `const functions = require('${functionsPath}');
+const funcName = process.argv[2];
+const payload = JSON.parse(process.argv[3]);
+const data = functions[funcName](...payload);
+process.stdout.write(JSON.stringify({ data }));
+`;
+    // write the child process file
+    if (options.writeFileSync) {
+      fs.writeFileSync(childProcessFilePath, childProcessFileString);
+    } else {
+      fs.writeFile(childProcessFilePath, childProcessFileString, (error) => {
+        if (error) console.error('error writing child process file');
+      });
+    }
+
+    // set execSyncFilePath for reference later
+    options.execSyncFilePath = execSyncFilePath;
+    // write the execSync file
+    if (options.writeFileSync) {
+      fs.writeFileSync(execSyncFilePath, execSyncFileString);
+    } else {
+      fs.writeFile(execSyncFilePath, execSyncFileString, (error) => {
+        if (error) console.error('error writing exec file sync file');
+      });
+    }
 
     // initialize new ChildPool stored on options object
     options.pool = new ChildPool(options.maxChildThreads, childProcessFilePath);
