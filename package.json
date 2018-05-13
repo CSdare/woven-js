@@ -4,7 +4,7 @@
   "description": "intelligent multi-threading and server processing",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/test/ChildPool.js",
+    "test": "mocha test/test/*.js",
     "test-build": "webpack",
     "start-dev": "node dev/testServer.js"
   },
