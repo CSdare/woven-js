@@ -1,12 +1,9 @@
 const { expect } = require('chai');
-const woven = require('../../index');
 const path = require('path');
-
+const woven = require('../../index');
+const options = require('../../src/options');
 
 const functionsPath = path.resolve(__dirname, '../util/functions.js');
-
-// want to test number of child processes being run and whether execSync
-// or pool.addChildTask is called
 
 const testReqAddTen = {
   body: {
@@ -35,16 +32,63 @@ const testRes = {
 const testNext = () => 'called next()';
 
 describe('Optimize unit tests', () => {
-  describe('Optimize configured to use child processes', () => {
-    before(() => woven.configure(functionsPath, { useChildProcess: true }));
-    it('Uses child process pool', async () => {
-      const result = await woven.optimize(testReqAddTen, testRes, testNext);
-      expect(result).to.equal(JSON.stringify(40));
-    });
-    it('Calls next when route does not match a woven route', async () => {
-      const result = await woven.optimize(testReqWrongUrl, testRes, testNext);
-      expect(result).to.equal('called next()');
-    });
-    // it();
+  // Monkey patch the pool.addChildTask and woven.optimize functions to test that
+  // pool.addChildTask is being called
+  it('Uses child process pool when configured to do so', async () => {
+    woven.configure(functionsPath, { useChildProcess: true, writeFileSync: true });
+    let calledFlag = false;
+    await (async function monkeyPatchPool() {
+      const oldOptimize = woven.optimize;
+      woven.optimize = function optimize(req, res, next) {
+        return new Promise((resolve, reject) => {
+          const oldOptionsPool = options.pool;
+          options.pool = {};
+          options.pool.addChildTask = function addChildTask() {
+            calledFlag = true;
+            options.pool = oldOptionsPool;
+            resolve();
+          };
+          oldOptimize(req, res, next).catch(err => reject(err));
+        });
+      };
+      await woven.optimize(testReqAddTen, testRes, testNext);
+      woven.optimize = oldOptimize;
+    }());
+    expect(calledFlag).to.equal(true);
+    const result = await woven.optimize(testReqAddTen, testRes, testNext);
+    expect(result).to.equal(JSON.stringify(40));
+  });
+
+  // Unable to redefine execSync within optimize function, so this tests that addChildTask
+  // is NOT called, and that the correct answer is still returned
+  it('Uses execSync when configured to do so', async () => {
+    woven.configure(functionsPath, { useChildProcess: false, writeFileSync: true });
+    let calledFlag = false;
+    await (async function monkeyPatchPool() {
+      const oldOptimize = woven.optimize;
+      woven.optimize = function optimize(req, res, next) {
+        return new Promise((resolve, reject) => {
+          const oldOptionsPool = options.pool;
+          options.pool = {};
+          options.pool.addChildTask = function addChildTask() {
+            calledFlag = true;
+            options.pool = oldOptionsPool;
+            resolve();
+          };
+          oldOptimize(req, res, next).then(() => resolve()).catch(err => reject(err));
+        });
+      };
+      await woven.optimize(testReqAddTen, testRes, testNext);
+      woven.optimize = oldOptimize;
+    }());
+    expect(calledFlag).to.equal(false);
+    const result = await woven.optimize(testReqAddAll, testRes, testNext);
+    expect(result).to.equal(JSON.stringify(55));
+  });
+
+  // Ensure that any route other than __woven__ calls next()
+  it('Calls next when route does not match a woven route', async () => {
+    const result = await woven.optimize(testReqWrongUrl, testRes, testNext);
+    expect(result).to.equal('called next()');
   });
 });
