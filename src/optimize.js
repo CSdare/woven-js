@@ -49,8 +49,8 @@ module.exports = function optimizeWrapper(options) {
         });
       } else {
         // synchronous processing using execSync method of child_process
-        const outputBuffer = execSync(`node ${options.execSyncFilePath} ${funcName} ${JSON.stringify(payload)}`);
-        output = JSON.parse(outputBuffer.toString()).data;
+        const buffer = execSync(`node ${options.execSyncFilePath} ${funcName} ${JSON.stringify(payload)}`);
+        output = JSON.parse(buffer.toString()).data;
       }
       return res.json(output);
     }
