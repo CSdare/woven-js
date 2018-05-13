@@ -106,6 +106,7 @@ const payload = JSON.parse(process.argv[3]);
 const data = functions[funcName](...payload);
 process.stdout.write(JSON.stringify({ data }));
 `;
+
     // write the child process file
     if (options.writeFileSync) {
       fs.writeFileSync(childProcessFilePath, childProcessFileString);
