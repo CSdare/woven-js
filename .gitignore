@@ -5,3 +5,5 @@ build/*.js
 build/*.svg
 .DS_Store
 package-lock.json
+test/util/functions_woven_exec_sync.js
+test/util/functions_woven_child_process.js

@@ -13,4 +13,5 @@ module.exports = {
   stringPing: null,
   useChildProcess: true,
   useWebWorkers: true,
+  writeFileSync: false,
 };

@@ -28,12 +28,16 @@ class ChildPool {
     this.childProcessFile = childProcessFile;
     this.taskQueue = [];
     this.childQueue = [];
+    this.initialized = false;
   }
 
   init() {
-    for (let i = 0; i < this.size; i += 1) {
-      this.childQueue.push(new ChildThread(this, this.childProcessFile));
-    }
+    if (this.initialized === false) {
+      for (let i = 0; i < this.size; i += 1) {
+        this.childQueue.push(new ChildThread(this, this.childProcessFile));
+      }
+      this.initialized = true;
+    } else throw new Error('Cannot re-initialize child process pool.');
   }
 
   addChildTask(childTask) {

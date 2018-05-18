@@ -6,28 +6,27 @@ module.exports = function optimizeWrapper(options) {
     // woven.connect function makes GET request to this route:
     if (req.url === '/__woven_first__') {
       if (options.alwaysClient === true) {
-        res.json({
+        return res.json({
           alwaysClient: true,
           alwaysServer: false,
           ping: null,
         });
       } else if (options.alwaysServer === true) {
-        res.json({
+        return res.json({
           alwaysClient: false,
           alwaysServer: true,
           ping: null,
         });
-      } else {
-        res.json({
-          alwaysClient: false,
-          alwaysServer: false,
-          dynamicMax: options.dynamicMax,
-          ping: options.stringPing,
-          maxWorkerThreads: options.maxWorkerThreads,
-          fallback: options.fallback,
-          useWebWorkers: options.useWebWorkers,
-        });
       }
+      return res.json({
+        alwaysClient: false,
+        alwaysServer: false,
+        dynamicMax: options.dynamicMax,
+        ping: options.stringPing,
+        maxWorkerThreads: options.maxWorkerThreads,
+        fallback: options.fallback,
+        useWebWorkers: options.useWebWorkers,
+      });
 
     // woven.run makes POST request to this route:
     } else if (req.url === '/__woven__') {
@@ -50,10 +49,11 @@ module.exports = function optimizeWrapper(options) {
         });
       } else {
         // synchronous processing using execSync method of child_process
-        const outputBuffer = execSync(`node ${options.execSyncFilePath} ${funcName} ${JSON.stringify(payload)}`);
-        output = JSON.parse(outputBuffer.toString()).data;
+        const buffer = execSync(`node ${options.execSyncFilePath} ${funcName} ${JSON.stringify(payload)}`);
+        output = JSON.parse(buffer.toString()).data;
       }
-      res.json(output);
-    } else next();
+      return res.json(output);
+    }
+    return next();
   };
 };
