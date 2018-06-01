@@ -82,9 +82,9 @@ describe('Optimize integration tests', () => {
         });
       request(app)
         .post('/__woven__')
-        .send({ funcName: 'nthFib', payload: [35] })
+        .send({ funcName: 'nthFib', payload: [25] })
         .end((err, res) => {
-          expect(res.body).to.equal(9227465);
+          expect(res.body).to.equal(75025);
           done();
         });
     });
